@@ -3,6 +3,12 @@ server:
   tomcat:
     uri-encoding: UTF-8
 spring:
+  thymeleaf:
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    content-type: text/html
+    cache: false
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/db_examsystem?useSSL=false&characterEncoding=utf8
