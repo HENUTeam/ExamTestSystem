@@ -2,6 +2,8 @@ server:
   port: 8080
   tomcat:
     uri-encoding: UTF-8
+  session:
+    timeout: 10000
 spring:
   thymeleaf:
     suffix: .html

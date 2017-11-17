@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
 
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
@@ -8,6 +8,6 @@
     <!-- 新 Bootstrap4 核心 CSS 文件 -->
 </head>
 <body>
-<h1>你是老师</h1>
+<h1>你是老师<p th:text="${session.user.name}">nukk</p></h1>
 </body>
 </html>
