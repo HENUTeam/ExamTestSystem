@@ -10,6 +10,6 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     public Teacher findByName(String name);
 
     @Query("select t from Teacher t where t.teaid=?1")
-    public Teacher findByTeaid(String teaid);
+    public Teacher findByTeaid(String eaid);
 
 }

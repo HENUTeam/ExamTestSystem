@@ -4,6 +4,7 @@ import com.henu.examtestsystem.teacher.bean.User;
 import com.henu.examtestsystem.teacher.repository.IUserService;
 import com.henu.examtestsystem.teacher.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
