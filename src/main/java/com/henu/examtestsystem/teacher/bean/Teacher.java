@@ -1,4 +1,4 @@
-package com.henu.examtestsystem.bean;
+package com.henu.examtestsystem.teacher.bean;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -6,22 +6,23 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "user")
-public class User {
-
+@Table(name = "teacher")
+public class Teacher {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(nullable = false, unique = true)
-    private String stuid;
+    @Column(nullable = false)
+    private String teaid;
     @Column(nullable = false)
     private String password;
+    private boolean ismager;
     @Column(nullable = false)
     private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdate;
 
-    public User() {
+
+    public Teacher() {
     }
 
     public Long getId() {
@@ -32,12 +33,12 @@ public class User {
         this.id = id;
     }
 
-    public String getStuid() {
-        return stuid;
+    public String getTeaid() {
+        return teaid;
     }
 
-    public void setStuid(String stuid) {
-        this.stuid = stuid;
+    public void setTeaid(String teaid) {
+        this.teaid = teaid;
     }
 
     public String getPassword() {
@@ -46,6 +47,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isIsmager() {
+        return ismager;
+    }
+
+    public void setIsmager(boolean ismager) {
+        this.ismager = ismager;
     }
 
     public String getName() {

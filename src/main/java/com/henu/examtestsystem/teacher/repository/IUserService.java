@@ -1,6 +1,6 @@
-package com.henu.examtestsystem.repository;
+package com.henu.examtestsystem.teacher.repository;
 
-import com.henu.examtestsystem.bean.User;
+import com.henu.examtestsystem.teacher.bean.User;
 
 import java.util.List;
 

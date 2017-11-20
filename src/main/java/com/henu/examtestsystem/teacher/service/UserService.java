@@ -1,8 +1,8 @@
-package com.henu.examtestsystem.service;
+package com.henu.examtestsystem.teacher.service;
 
-import com.henu.examtestsystem.bean.User;
-import com.henu.examtestsystem.repository.IUserService;
-import com.henu.examtestsystem.repository.UserRepository;
+import com.henu.examtestsystem.teacher.bean.User;
+import com.henu.examtestsystem.teacher.repository.IUserService;
+import com.henu.examtestsystem.teacher.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

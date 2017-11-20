@@ -1,4 +1,4 @@
-package com.henu.examtestsystem.controller;
+package com.henu.examtestsystem.teacher.controller;
 
 
 import org.springframework.stereotype.Controller;

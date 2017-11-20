@@ -1,6 +1,6 @@
-package com.henu.examtestsystem.repository;
+package com.henu.examtestsystem.teacher.repository;
 
-import com.henu.examtestsystem.bean.Teacher;
+import com.henu.examtestsystem.teacher.bean.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
