@@ -22,6 +22,13 @@ spring:
       min-idle: 5
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     database: MYSQL
+  devtools:
+    livereload:
+      enabled: true
+  mvc:
+    static-path-pattern: /**
+  resources:
+    static-locations: classpath:/templates/,classpath:/static/
