@@ -19,14 +19,6 @@
 
 </head>
 <body th:fragment="copyright">
-<script>
-    function change(obj) {
-        //点击改变图标颜色
-        document.getElementById("stuInfo").setAttribute("class", "");
-        document.getElementById("examList").setAttribute("class", "");
-        obj.setAttribute("class", "active");
-    }
-</script>
 <div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
     <div class="container">
         <div class="navbar-header">
@@ -40,10 +32,10 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active" onclick="change(this)" id="stuInfo"><a href="#"><span
+                <li   id="stuInfo"><a href="/student"><span
                         class="glyphicon glyphicon-home"></span> 个人信息</a></li>
-                <li onclick="change(this)" id="examList"><a href="#shop"><span class="glyphicon glyphicon-th"></span>
-                    考试列表</a></li>
+                <li  id="examList"><a th:href="@{/exam_list}"><span class="glyphicon glyphicon-th"></span>
+                    开始考试</a></li>
             </ul>
         </div><!-- /.nav-collapse -->
     </div><!-- /.container -->

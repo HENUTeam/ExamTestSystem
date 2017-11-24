@@ -2,5 +2,43 @@
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
 <div th:include="/student/header :: copyright"></div>
-
+<br/><br/><br/>
+<h2 style="text-align: center">请您认真对照您的个人信息是否正确，如有错误请联系监考人员</h2>
+<table style="width: 60%;margin: auto" class="table table-bordered table-hover">
+    <caption>个人信息</caption>
+    <tbody>
+    <tr >
+        <td>姓名：</td>
+        <td ><span th:text="${session.user.name}"/></td>
+        <td>性别：</td>
+        <td><span th:text="${session.user.sex}"/></td>
+        <td colspan="3" rowspan="3" height="30%" width="30%">
+            <img height="35%" width="100%" src="/images/defultHeader.png" class="img-rounded"/>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">身份证号：</td>
+        <td colspan="2"><span th:text="${session.user.IDCard}"/></td>
+    </tr>
+    <tr>
+        <td colspan="2">学号：</td>
+        <td colspan="2"><span th:text="${session.user.stuid}"/></td>
+    </tr>
+    </tbody>
+</table>
+<br/><br/><br/>
+<table class="table table-bordered" style="width: 50%;margin: auto">
+    <tr>
+        <td>
+            <h4>考试须知</h4>
+            <ol>
+                <li>考生对号入座后，应将准考证和身份证放置在桌面上，以备检查。</li>
+                <li>考生进入考场时，应将除准考证、身份证、非立体式不带汉字储存功能的电子计算器（免套）之外的其他物品（手机应设置成关闭状态）存放在监考人员指定的物品存放处，违者按违纪处理。</li>
+                <li>考场为考生统一提供演算草稿纸和演算用笔，考试结束后由监考人员统一收回，考生不得带出考场，违者按违纪处理。</li>
+                <li>考生应自觉遵守考场秩序，保持考场安静；遇到问题，应举手向监考人员示意；考场内不准吸烟、吃东西或有其他违纪违规行为。</li>
+                <li>如遇到无法登录考试服务器、信息有误、机器故障或网络故障等异常情况，考生应举手示意，请监考人员帮助解决，不得自行处置；如异常情况导致考生无法正常考试的，考生应当听从监考人员和考试组织机构的安排。</li>
+            </ol>
+        </td>
+    </tr>
+</table>
 </html>

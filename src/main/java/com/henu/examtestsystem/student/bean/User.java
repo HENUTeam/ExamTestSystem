@@ -1,4 +1,4 @@
-package com.henu.examtestsystem.teacher.bean;
+package com.henu.examtestsystem.student.bean;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -9,6 +9,10 @@ import java.util.Date;
 @Table(name = "user")
 public class User {
 
+    public static enum Sex {
+        男,//老师
+        女;//学生
+    };
     @Id
     @GeneratedValue
     private Long id;
@@ -20,10 +24,43 @@ public class User {
     private String name;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdate;
+    //@Column(nullable = false) 注意该getset 方法
+    //@Enumerated(EnumType.STRING)
+    //private Sex sex;
+    @Column(nullable = false)
+    private String sex;
+    @Column(nullable = false)
+    private String IDCard;
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    @Column
+    private String ip;//用于ip绑定 差一个考试信息
 
     public User() {
     }
 
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getIDCard() {
+        return IDCard;
+    }
+
+    public void setIDCard(String IDCard) {
+        this.IDCard = IDCard;
+    }
     public Long getId() {
         return id;
     }
