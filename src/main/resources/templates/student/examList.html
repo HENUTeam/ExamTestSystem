@@ -13,8 +13,8 @@
     <div id="answerupdate" style="width:40%;float: left;">
         <h2>答案上传</h2><br />
         <p>请按照考试要求将答案文件打包，再次进行上传。同名文件多次上传将会覆盖。</p>
-        <form>
-            <input type="file" name="paper" />
+        <form action= "@{ /student/submit }" method="post">
+            <input type="file" name="answer" />
             <input type="submit" name="btn_shangchuan" id="" value="上传" />
         </form>
     </div>

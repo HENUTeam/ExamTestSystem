@@ -20,8 +20,24 @@ public class Exam {
     private Date start_date;
     @Column(nullable = false)
     private Long exam_len; //考试时长
-    @Column
-    private String path; //考卷存放路径
+    @Column(nullable = false)
+    private String path; //答案存放路径 文件夹
+
+    @Column(nullable = false)
+    private String paper_path; //试卷存放路径  文件
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ExamState examState;
+
+    public String getPaper_path() {
+        return paper_path;
+    }
+
+    public void setPaper_path(String paper_path) {
+        this.paper_path = paper_path;
+    }
+
 
     public ExamState getExamState() {
         return examState;
@@ -31,10 +47,9 @@ public class Exam {
         this.examState = examState;
     }
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
 
-    private ExamState examState;
+
+
 
     public Exam(String subject, Date start_date, Long exam_len, String path) {
         this.subject = subject;

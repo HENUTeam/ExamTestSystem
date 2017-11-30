@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style type="text/css">
+        table {
+            width: 100%;
+            border-right: 1px solid;
+            border-bottom: 1px solid;
+            border-collapse: collapse;
+            line-height: 30px;
+        }
+        table td {
+            border-left: 1px solid;
+            border-top: 1px solid;
+        }
+        table th {
+            border-left: 1px solid;
+            border-top: 1px solid;
+        }
+    </style>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+<body style="margin: 0 20%;">
+<div th:replace="/student/header :: copyright"></div>
+<div style="width: 100%;">
+    <h3>已上传文件列表</h3>
+    <table>
+        <tr>
+            <th>文件名</th>
+            <th>文件大小</th>
+            <th>上传时间</th>
+        </tr>
+        <tr>
+            <td>a</td>
+            <td>a</td>
+            <td>a</td>
+        </tr>
+    </table>
+</div>
+<div style="width: 100%;">
+    <h3>答案上传</h3>
+    <form action="">
+        <input type="file" name="paper" />
+        <input type="submit" name="btn_shangchuan" id="" value="上传" />
+    </form>
+</div>
+</body>
+
+</html>

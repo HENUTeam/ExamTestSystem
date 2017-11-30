@@ -11,8 +11,7 @@ import java.util.List;
 public class User {
 
     public static enum Sex {
-        男,//老师
-        女;//学生
+        男,女;
     };
 
     public static enum Role {
@@ -41,7 +40,7 @@ public class User {
     //    @Column(nullable = false)
     private String IDCard;
     @Column
-    private String ip;//用于ip绑定 差一个考试信息
+    private String ip;//用于ip绑定
 
     @ManyToMany(cascade = {}, fetch = FetchType.EAGER)
     @JoinTable(name = "user_exam",
