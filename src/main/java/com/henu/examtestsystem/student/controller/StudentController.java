@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(value = "/student")
-public class UserController {
+public class StudentController {
 
     @Autowired
     UserRepository userRepository;
