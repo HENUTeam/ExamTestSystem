@@ -12,6 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public User findByName(String name);
 
     @Query("select t from User t where t.idnumber like?1")
-    public User findByStuid(String idnumber);
+    public User findByIdnumber(String idnumber);
 
 }
