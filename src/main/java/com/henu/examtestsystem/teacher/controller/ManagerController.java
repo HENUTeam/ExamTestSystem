@@ -24,6 +24,11 @@ public class ManagerController {
 
     Logger logger = LoggerFactory.getLogger(ManagerController.class);
 
+    @RequestMapping(value = "/")
+    public String home() {
+        return "/manager/index";
+    }
+
 
     @RequestMapping("/list")
     public String list(Model model) {
