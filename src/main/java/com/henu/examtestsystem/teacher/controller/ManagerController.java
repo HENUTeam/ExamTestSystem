@@ -2,6 +2,7 @@ package com.henu.examtestsystem.teacher.controller;
 
 import com.henu.examtestsystem.student.bean.User;
 import com.henu.examtestsystem.student.repository.UserRepository;
+import com.henu.examtestsystem.student.service.MD5Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,12 @@ public class ManagerController {
     public String add(User user, ModelMap modelMap) {
 
         try {
+            user.setCreatedate(new Date());
+            String pwd = user.getPassword();
+            logger.info("-----------md5之前：{}", pwd);
+            String pwdmd5 = MD5Service.EncoderByMd5(pwd);
+            logger.info("-----------md5之前：{}", pwdmd5);
+            user.setPassword(pwdmd5);
             userRepository.save(user);
         } catch (Exception e) {
             modelMap.addAttribute("error", true);

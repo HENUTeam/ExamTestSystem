@@ -13,4 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select t from User t where t.idnumber like?1")
     public User findByStuid(String idnumber);
+
 }
