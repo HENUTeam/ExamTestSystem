@@ -43,6 +43,13 @@ public class User {
     @Column
     private String ip;//用于ip绑定 差一个考试信息
 
+    @ManyToMany(cascade = {}, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_exam",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "exam_id")})
+    private List<Exam> exams;
+
+
     public User() {
     }
 
@@ -116,5 +123,13 @@ public class User {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public List<Exam> getExams() {
+        return exams;
+    }
+
+    public void setExams(List<Exam> exams) {
+        this.exams = exams;
     }
 }
