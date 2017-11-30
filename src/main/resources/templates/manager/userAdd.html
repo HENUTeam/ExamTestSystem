@@ -24,6 +24,7 @@
         </div>
     </div>
     <form class="form-horizontal" th:action="@{/manager/add}" th:object="${user}" method="post">
+        <input type="hidden" name="id" th:value="*{id}"/>
         <div class="form-group form-inline">
             <label for="idnumber" class="col-sm-1 control-label">学号</label>
             <input type="text" class="form-control" name="idnumber" th:value="*{idnumber}" id="idnumber"
@@ -37,9 +38,9 @@
         <div class="form-group form-inline">
             <label class="control-label col-sm-1">角色</label>
             <select name="role" class="form-control" id="role">
-                <option>admin</option>
-                <option>teacher</option>
-                <option>student</option>
+                <option value="admin" th:selected="${role=='admin'}">admin</option>
+                <option value="teacher" th:selected="${role=='teacher'}">teacher</option>
+                <option value="student" th:selected="${role=='student'}">student</option>
             </select>
         </div>
         <div class="form-group form-inline">
@@ -49,8 +50,8 @@
         <div class="form-group form-inline">
             <label class="control-label col-sm-1">性别:</label>
             <select name="sex" class="form-control" id="sex">
-                <option>男</option>
-                <option>女</option>
+                <option value="男" th:selected="${sex=='男'}">男</option>
+                <option value="女" selected="selected" th:selected="${sex=='女'}">女</option>
             </select>
         </div>
         <div class="form-group form-inline">

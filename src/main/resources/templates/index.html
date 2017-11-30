@@ -16,16 +16,6 @@
     <!-- 新 Bootstrap4 核心 CSS 文件 -->
 </head>
 <body class="container">
-<script th:inline="javascript">
-    $().ready(function () {
-        var show = [[${iserro}]];
-        if (show == false || show == null) {
-            $("#info_erro").hide();
-        } else {
-            $("#info_erro").show();
-        }
-    });
-</script>
 <script>
     //点击关闭按钮错误信息隐藏
     function clos() {
@@ -34,11 +24,11 @@
 </script>
 <div class="with:80% center-block col-sm-5" role="main">
     <img src="/images/stu.jpg" class="image-box"/>
-    <div id="info_erro" class="alert alert-danger alert-dismissable">
+    <div th:if="${info_erro}" class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" onclick="clos()">&times;</button>
         <strong>erro!</strong> Invalid username or password
     </div>
-    <form class="form-horizontal" th:action="@{/login}" method="post">
+    <form class="form-horizontal" th:action="@{/togo}" method="post">
         <div class="form-group">
             <label for="name" class="col-sm-2 control-label">IDnumber</label>
             <div class="col-sm-10">
