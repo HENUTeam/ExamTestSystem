@@ -1,10 +1,24 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns:th="http://www.thymeleaf.org">
-
-
-<body>
+<body style=" margin: 0 10%;">
 <div th:replace="/student/header :: copyright"></div>
-
+<div style=" width: auto;">
+    <div id="paperdownload" style="width:40%;float: left; ">
+        <h2>试卷下载</h2><br />
+        <p id="exam_paper" style="background-color: #555; ">
+            本次考试没有电子试卷。
+        </p>
+    </div>
+    <div id="answerupdate" style="width:40%;float: left;">
+        <h2>答案上传</h2><br />
+        <p>请按照考试要求将答案文件打包，再次进行上传。同名文件多次上传将会覆盖。</p>
+        <form>
+            <input type="file" name="paper" />
+            <input type="submit" name="btn_shangchuan" id="" value="上传" />
+        </form>
+    </div>
+</div>
 </body>
+
 </html>

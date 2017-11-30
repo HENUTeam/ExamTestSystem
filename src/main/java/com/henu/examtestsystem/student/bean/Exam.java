@@ -8,6 +8,9 @@ import java.util.Date;
 @Entity
 @Table(name = "exam")
 public class Exam {
+    public static enum ExamState {
+        now,end,future;
+    };
     @Column(nullable = false)
     private String subject;
     @Id
@@ -19,6 +22,19 @@ public class Exam {
     private Long exam_len; //考试时长
     @Column
     private String path; //考卷存放路径
+
+    public ExamState getExamState() {
+        return examState;
+    }
+
+    public void setExamState(ExamState examState) {
+        this.examState = examState;
+    }
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+
+    private ExamState examState;
 
     public Exam(String subject, Date start_date, Long exam_len, String path) {
         this.subject = subject;
