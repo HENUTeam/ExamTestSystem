@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" th:href="@{/css/bs4.css}"/>
+    <link rel="stylesheet" href="../../static/css/bs4.css"/>
+
+</head>
+<body class="container">
+
+<br/>
+<h1>用户列表</h1>
+<br/><br/>
+
+<div class="with:80% center">
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="注销"/>
+    </form>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>学号</th>
+            <th>密码</th>
+            <th>姓名</th>
+            <th>添加日期</th>
+            <th>性别</th>
+            <th>身份证号</th>
+            <th>所具备的角色</th>
+            <th>编辑</th>
+            <th>删除</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user: ${users}">
+            <th scope="row" th:text="${user.id}">1</th>
+            <td th:text="${user.idnumber}">neo</td>
+            <td th:text="${user.password}">Otto</td>
+            <td th:text="${user.name}">admin</td>
+            <td th:text="${user.createdate}">2017-11-30</td>
+            <td th:text="${user.sex}">男</td>
+            <td th:text="${user.IDCard}">410327000000000000</td>
+            <td th:text="${user.role}">admin</td>
+            <td><a th:href="@{/manager/toEdit(id=${user.id})}">编辑</a></td>
+            <td><a th:href="@{/manager/delete(id=${user.id})}">删除</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-2 control-label">
+        <a href="/toAdd" th:href="@{/manager/toAdd}" class="btn btn-info">add</a>
+    </div>
+</div>
+</body>
+</html>

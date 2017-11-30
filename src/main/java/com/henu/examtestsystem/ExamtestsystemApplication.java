@@ -10,8 +10,6 @@ import org.springframework.stereotype.Controller;
 @ComponentScan
 public class ExamtestsystemApplication {
 
-
-
     public static void main(String[] args) {
         SpringApplication.run(ExamtestsystemApplication.class, args);
     }
