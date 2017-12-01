@@ -3,7 +3,7 @@ server:
   tomcat:
     uri-encoding: UTF-8
   session:
-    timeout: 10000
+    timeout: 10800
 spring:
   thymeleaf:
     suffix: .html
@@ -15,7 +15,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost:3306/db_examsystem?useSSL=false&characterEncoding=utf8
     username: root
-    password: 123456
+    password: root
     tomcat:
       max-idle: 10
       max-wait: 10000

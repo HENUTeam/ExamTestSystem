@@ -12,20 +12,19 @@
     <link rel="stylesheet" href="/css/bs4.css"/>
     <script src="/js/jquery-3.2.1.js"></script>
     <link rel="stylesheet" href="/css/style1.css"/>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 
     <!-- 新 Bootstrap4 核心 CSS 文件 -->
 </head>
 <body class="container">
 <script>
-    //点击关闭按钮错误信息隐藏
-    function clos() {
-        $("#info_erro").hide();
-    }
+
 </script>
 <div class="with:80% center-block col-sm-5" role="main">
     <img src="/images/stu.jpg" class="image-box"/>
-    <div th:if="${info_erro}" class="alert alert-danger alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" onclick="clos()">&times;</button>
+    <div th:if="${session.info_erro}" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>erro!</strong> Invalid username or password
     </div>
     <form class="form-horizontal" th:action="@{/togo}" method="post">

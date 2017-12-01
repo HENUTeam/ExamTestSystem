@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -26,12 +27,12 @@ public class LoginController {
     }
 
     @RequestMapping(value = {"/", "/login"})
-    public String home() {
+    public String home(HttpSession session) {
         return "index";
     }
 
     @RequestMapping(value = {"/togo"})
-    public String go(String name, String password, ModelMap modelMap, HttpSession session) {
+    public String go(String name, String password, HttpSession session) {
         User user = userRepository.findByIdnumber(name);
         boolean f = false;
         if (user == null) {
@@ -44,10 +45,11 @@ public class LoginController {
             }
         }
         if (f) {
-            modelMap.addAttribute("info_erro", f);
+            session.setAttribute("info_erro", f);
             return "redirect:/";
         } else {
             session.setAttribute("user", user);
+            logger.info(user.getPassword());
             if (user.getRole().equals(User.Role.student)) {
                 return "redirect:/student/";
             } else if (user.getRole().equals(User.Role.teacher)) {
@@ -59,6 +61,34 @@ public class LoginController {
         }
         //return "redirect:/";
     }
+
+    @RequestMapping(value = {"/resetpwd"})
+    public String home(String oldpwd, String password, String newpwd, HttpSession session, ModelMap modelMap) {
+        User user = (User) session.getAttribute("user");
+        boolean a = MD5Service.checkpassword(oldpwd, user.getPassword());
+        boolean f = false;
+        if (!a) {
+            f = true;
+            modelMap.addAttribute("msg", "输入的旧密码不正确");
+        } else if (!password.equals(newpwd)) {
+            f = true;
+            modelMap.addAttribute("msg", "两次输入密码不一致");
+        }
+        if (f) {
+            modelMap.addAttribute("error", true);
+            return "/manager/editPwd";
+        }
+        return "redirect:/manager/list";
+    }
+
+    @RequestMapping("/toEditself")
+    public String toEdit(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        logger.info(user.getPassword());
+        return "/manager/editPwd";
+    }
+
 
 
 }

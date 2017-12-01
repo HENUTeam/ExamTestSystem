@@ -10,10 +10,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 @Controller
 @RequestMapping(value = "/manager")
@@ -23,6 +27,7 @@ public class ManagerController {
     UserRepository userRepository;
 
     Logger logger = LoggerFactory.getLogger(ManagerController.class);
+
 
     @RequestMapping(value = "/")
     public String home() {
@@ -72,6 +77,7 @@ public class ManagerController {
         return "/manager/userAdd";
     }
 
+
     @RequestMapping("/edit")
     public String edit(User user) {
         //System.out.println("--------"+user.getName());
@@ -86,5 +92,50 @@ public class ManagerController {
         return "redirect:list";
     }
 
+    @RequestMapping("/test")
+    public String test() {
+        return "manager/layout";
+    }
 
+    @RequestMapping("/teacheradd")
+    public String teacheradd(ModelMap modelMap, boolean error) {
+        List<User> users = userRepository.findAdminOrTeacher();
+        modelMap.addAttribute("users", users);
+        modelMap.addAttribute("error", error);
+        return "/manager/teacheradd";
+    }
+
+    @RequestMapping("/toteaAdd")
+    public String toTeaAdd(User user, String admin) {
+        user.setRole(User.Role.teacher);
+        user.setSex(User.Sex.男);
+        if (admin != null) {
+            user.setRole(User.Role.admin);
+        }
+        boolean f = false;
+        if (user.getName().length() <= 0 || user.getIdnumber().length() <= 0 || user.getPassword().length() <= 0) {
+            f = true;
+        } else {
+            user.setCreatedate(new Date());
+            user.setPassword(MD5Service.EncoderByMd5(user.getPassword()));
+            try {
+                userRepository.save(user);
+            } catch (Exception e) {
+                f = true;
+                e.printStackTrace();
+            }
+        }
+        logger.info("------error:{}", f);
+        return "redirect:teacheradd?error=" + f;
+    }
+
+    @RequestMapping("/delectexam")
+    public String delectexam() {
+        return "/manager/delectexam";
+    }
+
+    @RequestMapping("/sysconfig")
+    public String sysconfig() {
+        return "/manager/sysconfig";
+    }
 }

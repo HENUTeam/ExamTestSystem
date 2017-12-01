@@ -8,3 +8,12 @@
 .center {
     margin: 0 auto;
 }
+
+.exam-alert {
+    padding: 10px;
+    background-color: #222;
+    color: #EEE;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+}
