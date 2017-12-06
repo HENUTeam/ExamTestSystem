@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -35,13 +36,6 @@ public class ManagerController {
     }
 
 
-    @RequestMapping("/list")
-    public String list(Model model) {
-        List<User> users = userRepository.findAll();
-        model.addAttribute("users", users);
-        return "manager/showUser";
-    }
-
     @RequestMapping("/toAdd")
     public String toAdd(ModelMap modelMap) {
         String s = "";
@@ -51,62 +45,52 @@ public class ManagerController {
     }
 
     @RequestMapping("/add")
-    public String add(User user, ModelMap modelMap) {
-
+    public String add(User user, ModelMap modelMap, String admin) {
+        User user1 = userRepository.findOne(user.getId());
         try {
-            user.setCreatedate(new Date());
-            String pwd = user.getPassword();
-            logger.info("-----------md5之前：{}", pwd);
-            String pwdmd5 = MD5Service.EncoderByMd5(pwd);
-            logger.info("-----------md5之前：{}", pwdmd5);
-            user.setPassword(pwdmd5);
-            userRepository.save(user);
+            user1.setRole(User.Role.teacher);
+            if (admin != null) {
+                user1.setRole(User.Role.admin);
+            }
+            user1.setName(user.getName());
+            user1.setIdnumber(user.getIdnumber());
+            userRepository.save(user1);
         } catch (Exception e) {
             modelMap.addAttribute("error", true);
             modelMap.addAttribute("user", user);
             return "/manager/userAdd";
         }
 
-        return "redirect:list";
+        return "forward:teacheradd";
     }
 
     @RequestMapping("/toEdit")
     public String toEdit(Model model, Long id) {
         User user = userRepository.findOne(id);
+        boolean f = false;
+        if (user.getRole() == User.Role.admin) {
+            f = true;
+        }
         model.addAttribute("user", user);
+        model.addAttribute("f", f);
         return "/manager/userAdd";
     }
-
-
-    @RequestMapping("/edit")
-    public String edit(User user) {
-        //System.out.println("--------"+user.getName());
-        userRepository.save(user);
-        return "redirect:list";
-    }
-
 
     @RequestMapping("/delete")
     public String delete(Long id) {
         userRepository.delete(id);
-        return "redirect:list";
-    }
-
-    @RequestMapping("/test")
-    public String test() {
-        return "manager/layout";
+        return "forward:teacheradd";
     }
 
     @RequestMapping("/teacheradd")
-    public String teacheradd(ModelMap modelMap, boolean error) {
+    public String teacheradd(ModelMap modelMap) {
         List<User> users = userRepository.findAdminOrTeacher();
         modelMap.addAttribute("users", users);
-        modelMap.addAttribute("error", error);
         return "/manager/teacheradd";
     }
 
     @RequestMapping("/toteaAdd")
-    public String toTeaAdd(User user, String admin) {
+    public String toTeaAdd(User user, String admin, ModelMap modelMap) {
         user.setRole(User.Role.teacher);
         user.setSex(User.Sex.男);
         if (admin != null) {
@@ -125,8 +109,9 @@ public class ManagerController {
                 e.printStackTrace();
             }
         }
+        modelMap.addAttribute("f", f);
         logger.info("------error:{}", f);
-        return "redirect:teacheradd?error=" + f;
+        return "forward:teacheradd";
     }
 
     @RequestMapping("/delectexam")

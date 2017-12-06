@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
+    <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="../../static/css/bs4.css"/>
+    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
+
+
+</head>
+<body>
+<div>
+    <div>
+        <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+        <div class="nav navbar bg-dark navbar-dark navbar-expand-sm">
+            <nav role="navigation" style="padding-left: 10%">
+                <ul class="navbar-nav">
+                    <span class="navbar-brand"><strong>修改密码</strong></span>
+                </ul>
+            </nav>
+            <ul class="navbar-nav" style="margin-left: auto; padding: 0px 100px">
+                <li class="nav-item">
+                <span class="navbar-text">欢迎你:
+                <strong th:text="${session.user.name}"></strong>
+                </span>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout"><i class="glyphicon glyphicon-share"></i>退出</a>
+                </li>
+            </ul>
+        </div>
+        <div class="container">
+            <h1>
+                <img src="/images/teacher.png"/> 上机考试管理
+            </h1>
+        </div>
+    </div>
+    <div class="container">
+        <div class="alert alert-info">
+              <strong>修改成功会跳转登录界面</strong>。
+        </div>
+        <form class="" th:action="@{/toEditself}" th:object="${session.user}" method="post">
+            <div th:if="${f}" class="form-group form-inline">
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    erro!<strong th:text="${msg}"> 添加错误可能输入字段不正确</strong>
+                </div>
+            </div>
+            <div class="form-group form-inline">
+                <label for="idnumber" class="col-sm-1 control-label">用户名</label>
+                <strong th:text="*{idnumber}" id="idnumber"></strong>
+            </div>
+            <div class="form-group form-inline">
+                <label class="col-sm-1 control-label">姓名</label>
+                <strong th:text="*{name}"></strong>
+            </div>
+            <div class="form-group form-inline">
+                <label for="oldpwd" class="col-sm-1 control-label">旧的密码</label>
+                <input type="text" class="form-control" name="oldpwd" id="oldpwd"
+                       placeholder="输入旧的密码"/>
+            </div>
+            <div class="form-group form-inline">
+                <label for="password" class="col-sm-1 control-label">密码</label>
+                <input type="text" class="form-control" name="password" id="password"
+                       placeholder="新的密码"/>
+            </div>
+            <div class="form-group form-inline">
+                <label for="newpwd" class="col-sm-1 control-label">再次输入</label>
+                <input type="text" class="form-control" name="newpwd" id="newpwd"
+                       placeholder="重新输入"/>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input type="submit" value="Submit" class="btn btn-info"/>
+                    &nbsp; &nbsp; &nbsp;
+                    <input type="reset" value="Reset" class="btn btn-info"/>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

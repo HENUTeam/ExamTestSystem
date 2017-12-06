@@ -10,7 +10,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.InternalResourceView;
+import org.springframework.web.servlet.view.RedirectView;
+import org.thymeleaf.spring4.view.AjaxThymeleafView;
+import org.thymeleaf.spring4.view.ThymeleafView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
@@ -27,7 +35,11 @@ public class LoginController {
     }
 
     @RequestMapping(value = {"/", "/login"})
-    public String home(HttpSession session) {
+    public String home(String key, Model model, String error) {
+        logger.info("----}“{}", error);
+        if (key != null && key.equals("error")) {
+            model.addAttribute("error", true);
+        }
         return "index";
     }
 
@@ -45,8 +57,8 @@ public class LoginController {
             }
         }
         if (f) {
-            session.setAttribute("info_erro", f);
-            return "redirect:/";
+            //session.setAttribute("info_erro", f);
+            return "redirect:/login?key=error";
         } else {
             session.setAttribute("user", user);
             logger.info(user.getPassword());
@@ -57,38 +69,63 @@ public class LoginController {
             } else if (user.getRole().equals(User.Role.admin)) {
                 return "redirect:/manager/";
             }
-            return "redirect:/manager/list";
         }
-        //return "redirect:/";
+        return "index";
     }
 
-    @RequestMapping(value = {"/resetpwd"})
-    public String home(String oldpwd, String password, String newpwd, HttpSession session, ModelMap modelMap) {
-        User user = (User) session.getAttribute("user");
-        boolean a = MD5Service.checkpassword(oldpwd, user.getPassword());
-        boolean f = false;
-        if (!a) {
-            f = true;
-            modelMap.addAttribute("msg", "输入的旧密码不正确");
-        } else if (!password.equals(newpwd)) {
-            f = true;
-            modelMap.addAttribute("msg", "两次输入密码不一致");
-        }
-        if (f) {
-            modelMap.addAttribute("error", true);
-            return "/manager/editPwd";
-        }
-        return "redirect:/manager/list";
-    }
 
     @RequestMapping("/toEditself")
-    public String toEdit(Model model, HttpSession session) {
+    public String toEdit(String oldpwd, String password, String newpwd,
+                         HttpSession session, ModelMap modelMap) {
         User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
-        logger.info(user.getPassword());
-        return "/manager/editPwd";
+        modelMap.addAttribute("user", user);
+        boolean f = false;
+        if (oldpwd != null && password != null && newpwd != null) {
+            logger.info("password:{},newpwd{}", password.length(), newpwd.length());
+            boolean a = MD5Service.checkpassword(oldpwd, user.getPassword());
+            f = false;
+            if (!a) {
+                f = true;
+                modelMap.addAttribute("msg", "输入的旧密码不正确");
+            } else if (password.length() <= 0) {
+                f = true;
+                modelMap.addAttribute("msg", "请输入新的密码");
+            } else if (!password.equals(newpwd)) {
+                f = true;
+                modelMap.addAttribute("msg", "两次输入密码不一致");
+            }
+            if (f) {
+                modelMap.addAttribute("f", f);
+                return "/editPwd";
+            } else {
+                user.setPassword(MD5Service.EncoderByMd5(password));
+                try {
+                    user = userRepository.save(user);
+                    return "redirect:/logout";
+                } catch (Exception e) {
+                    modelMap.addAttribute("f", f);
+                    modelMap.addAttribute("msg", "修改失败");
+                    return "/editPwd";
+                }
+            }
+        }
+        return "/editPwd";
     }
 
+    @RequestMapping("/logout")
+    public String logout(HttpSession session) {
+        session.setAttribute("user", null);
+        session.removeAttribute("user");
+        return "redirect:/";
+    }
 
+    @RequestMapping("/test")
+    public String test(HttpServletRequest request) {
+        String name = (String) request.getAttribute("name");
+        ModelMap modelMap = new ModelMap();
+        logger.info(name);
+        modelMap.addAttribute("error", true);
+        return ("index");
+    }
 
 }

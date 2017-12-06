@@ -23,7 +23,6 @@ public class User {
     private Long id;
     @Column(nullable = false, unique = true)
     private String idnumber;
-    @Column(nullable = false)
     private String password;
     @Column(nullable = false)
     private String name;
@@ -33,12 +32,9 @@ public class User {
     @Column(nullable = false) //注意该getset 方法
     @Enumerated(EnumType.STRING)
     private Role role;
-
     @Column(nullable = false) //注意该getset 方法
     @Enumerated(EnumType.STRING)
     private Sex sex;
-    //    @Column(nullable = false)
-    private String IDCard;
     @Column
     private String ip;//用于ip绑定
 
@@ -108,13 +104,6 @@ public class User {
         this.sex = sex;
     }
 
-    public String getIDCard() {
-        return IDCard;
-    }
-
-    public void setIDCard(String IDCard) {
-        this.IDCard = IDCard;
-    }
 
     public String getIp() {
         return ip;

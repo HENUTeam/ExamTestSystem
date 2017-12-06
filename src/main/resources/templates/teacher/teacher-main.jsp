@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>教师管理主页面</title>
     <link rel="stylesheet"
-          href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+		  href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <script
             src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script
@@ -26,8 +26,7 @@
                 <li class="active"><a href="teachermain.jsp">首页</a></li>
                 <li><a href="beforeexam.jsp">考前操作</a></li>
                 <li class="dropdown"><a href="#" class="dropdown-toggle"
-                                        data-toggle="dropdown"> 考中管理 <b class="caret"></b>
-                </a>
+										data-toggle="dropdown"> 考中管理 <b class="carcet"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="exammanage.jsp">考试管理</a></li>
                         <li><a href="studentadmin.jsp">学生信息</a></li>

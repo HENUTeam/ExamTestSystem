@@ -11,6 +11,7 @@
     <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
     <link rel="stylesheet" th:href="@{/css/bs4.css}" href="../../static/css/bs4.css"/>
     <link rel="stylesheet" th:href="@{/css/exam.css}" href="../../static/css/exam.css"/>
+    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
     <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <script>
@@ -41,7 +42,7 @@
 </div>
 
 <div class="container" style="margin-top: 10px">
-    <table class="table table-hover">
+    <table class="table table-bordered">
         <thead>
         <tr>
             <th>id</th>
@@ -56,7 +57,12 @@
             <th th:text="${user.id}">1</th>
             <td th:text="${user.idnumber}">neo</td>
             <td th:text="${user.name}">admin</td>
-            <td th:text="${user.role}">admin</td>
+            <td>
+                <span th:if="${#strings.length(user.role)}==5" class="glyphicon glyphicon-ok"></span></td>
+            <td>
+                <a class="glyphicon glyphicon-edit" th:href="@{/manager/toEdit(id=${user.id})}"></a>
+                <a class="glyphicon glyphicon-trash" th:href="@{/manager/delete(id=${user.id})}"></a>
+            </td>
         </tr>
         </tbody>
     </table>

@@ -8,7 +8,6 @@
     <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
     <link rel="stylesheet" th:href="@{/css/bs4.css}" href="../../static/css/bs4.css"/>
     <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
-
 </head>
 <body>
 
@@ -34,9 +33,8 @@
             </ul>
         </nav>
         <ul class="navbar-nav" style="margin-left: auto; padding: 0px 10px">
-                <span class="navbar-text">
-                    传送门至<strong><a href="/teacher/">老师界面</a></strong>
-                </span>
+            <span class="navbar-text">
+                传送门: <strong><a href="/teacher/">教师页面</a></strong> </span>
             <span class="navbar-text">欢迎你:
                     <strong>
                         <strong th:text="${session.user.name}">
@@ -46,7 +44,7 @@
             <li class="nav-item"><a class="nav-link" th:href="@{/toEditself}"><i class="glyphicon glyphicon-pencil"></i>修改密码</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#"><i class="glyphicon glyphicon-share"></i>退出</a>
+                <a class="nav-link" href="/logout"><i class="glyphicon glyphicon-share"></i>退出</a>
             </li>
         </ul>
     </div>
