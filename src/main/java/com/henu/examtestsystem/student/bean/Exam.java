@@ -18,19 +18,15 @@ public class Exam {
     private Long id;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date start_date;
+    @Column(nullable = false)
+    private Long exam_len; //考试时长
+    @Column(nullable = false)
+    private String path; //答案存放路径 文件夹
 
     @Column(nullable = false)
-    private String path; //答案存放路径 文件路径 格式"\path1\path\"
+    private String paper_path; //试卷存放路径  文件
 
     @Column(nullable = false)
-    private String paper_path; //试卷存放路径  文件 格式 "\path\name.file"
-
-    @Column(nullable = false)
-    boolean is_download; //判断教师是否下载答卷
-
-
-    @Column(nullable = false)
-
     @Enumerated(EnumType.STRING)
     private ExamState examState;
 
@@ -55,26 +51,19 @@ public class Exam {
 
 
 
-    public Exam(String subject, Date start_date, String path) {
+    public Exam(String subject, Date start_date, Long exam_len, String path) {
         this.subject = subject;
         this.start_date = start_date;
+        this.exam_len = exam_len;
         this.path = path;
     }
 
-    public Exam(String subject, Date start_date) {
+    public Exam(String subject, Date start_date, Long exam_len) {
         this.subject = subject;
         this.start_date = start_date;
+        this.exam_len = exam_len;
     }
 
-    public Exam() {
-    }
-    public boolean isIs_download() {
-        return is_download;
-    }
-
-    public void setIs_download(boolean is_download) {
-        this.is_download = is_download;
-    }
     public String getSubject() {
         return subject;
     }
@@ -99,6 +88,13 @@ public class Exam {
         this.start_date = start_date;
     }
 
+    public Long getExam_len() {
+        return exam_len;
+    }
+
+    public void setExam_len(Long exam_len) {
+        this.exam_len = exam_len;
+    }
 
     public String getPath() {
         return path;
