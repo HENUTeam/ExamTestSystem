@@ -1,8 +1,11 @@
 package com.henu.examtestsystem.teacher.controller;
 
+import com.henu.examtestsystem.student.bean.Exam;
+import com.henu.examtestsystem.student.repository.ExamRepository;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,10 +14,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/teacher")
 public class TeacherController {
+
+    @Autowired
+    ExamRepository examRepository;
 
     Logger logger = LoggerFactory.getLogger(TeacherController.class);
 
@@ -26,6 +33,7 @@ public class TeacherController {
     @RequestMapping(value = "/exam-before")
     public ModelAndView beforeexam(){
         ModelAndView mv = new ModelAndView();
+        List<Exam> exams = examRepository.findAll();
         mv.setViewName("/teacher/exam-before");
         return mv;
     }
