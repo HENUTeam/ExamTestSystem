@@ -26,8 +26,7 @@ public class User {
     private String password;
     @Column(nullable = false)
     private String name;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createdate;
+
 
     @Column(nullable = false) //注意该getset 方法
     @Enumerated(EnumType.STRING)
@@ -86,14 +85,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Date getCreatedate() {
-        return createdate;
-    }
-
-    public void setCreatedate(Date createdate) {
-        this.createdate = createdate;
     }
 
     public Sex getSex() {

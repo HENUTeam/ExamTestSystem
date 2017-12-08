@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="/css/bs4.css"/>
+    <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
+    <link rel="stylesheet" th:href="@{/css/exam.css}" href="../../static/css/exam.css"/>
+    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div th:replace="/teacher/layout::header"></div>
+
+<div class="container container-fluid">
+    <div style="margin: 1px auto;">
+        <div class="col-sm-3 exam-desc">
+            <h3>考前操作</h3>
+            <ul>
+                <li>可以新建考试：指定考试名称、开始时间等</li>
+                <li>可以编辑自己创建的、未开始的考试，除了修改考试信息，还可以：</li>
+                <li>上传试卷</li>
+                <li>学生名单导入</li>
+                <li>开启考试</li>
+            </ul>
+        </div>
+        <div class="col-sm-3 exam-desc">
+            <h3>考中管理</h3>
+            <ul>
+                <li>可以查看考试情况</li>
+                <li>可以管理学生信息，手动添加个别学生信息</li>
+                <li>可以解除学生登录锁定</li>
+                <li>可以添加或删除通知消息</li>
+            </ul>
+        </div>
+        <div class="col-sm-3 exam-desc">
+            <h3>考后操作</h3>
+            <ul style="margin-top: 40px">
+                <li>主考教师可以结束考试</li>
+                <li>主考教师可以打包下载学生提交文件</li>
+                <li>主考教师可以导出提交信息</li>
+                <li>如果管理员设置，主考教师可以清除和删除考试</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

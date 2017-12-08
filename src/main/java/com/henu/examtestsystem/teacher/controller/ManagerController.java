@@ -100,7 +100,6 @@ public class ManagerController {
         if (user.getName().length() <= 0 || user.getIdnumber().length() <= 0 || user.getPassword().length() <= 0) {
             f = true;
         } else {
-            user.setCreatedate(new Date());
             user.setPassword(MD5Service.EncoderByMd5(user.getPassword()));
             try {
                 userRepository.save(user);
