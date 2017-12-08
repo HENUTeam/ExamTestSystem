@@ -65,37 +65,35 @@ public class TeacherController {
 
         try {
             logger.info("ename:{},starttime:{}", ename, starttime);
-            String path = "./" + sf.format(new Date())+ename;
-            String pathAns = path + "/答案";
-//            Exam exam = new Exam();
-//            User user = (User) session.getAttribute("user");
-//            if(user!=null){
-//                exam.setCreateUser(user.getName());
-//            }
-//            Date date = sf.parse(starttime);
-//            exam.setSubject(ename);
-//            exam.setStart_date(date);
-//            exam.setHasClean(false);
-//            exam.setHasStore(false);
-//            exam.setAutostart(false);
-//            exam.setPaper_path(pathAns);
-//            exam.setPath(path);
-//            exam.setExamState(Exam.ExamState.future);
-//            if(eautostart != null){
-//                exam.setAutostart(true);
-//            }
+            String path = "./" + sf.format(new Date()) + "_" + ename + "/";
+            path = path.replace(" ", "_");
+            String pathAns = path + "/答案/";
             java.io.File file = new java.io.File(path);
             java.io.File fileAns = new java.io.File(pathAns);
-
-            if(!file.exists()){
-                file.mkdir();
-            }
-            if(!fileAns.exists()){
-                fileAns.mkdir();
-            }
             logger.info("-------====realPath:{},path:{}",
                     path, session.getServletContext().getRealPath(path));
-            //examRepository.save(exam);
+//            if(!file.exists()){
+//
+//                file.mkdir();
+//            }
+            Exam exam = new Exam();
+            User user = (User) session.getAttribute("user");
+            if (user != null) {
+                exam.setCreateUser(user.getName());
+            }
+            Date date = sf.parse(starttime);
+            exam.setSubject(ename);
+            exam.setStart_date(date);
+            exam.setHasClean(false);
+            exam.setHasStore(false);
+            exam.setAutostart(false);
+            exam.setPaper_path(pathAns);
+            exam.setPath(path);
+            exam.setExamState(Exam.ExamState.future);
+            if (eautostart != null) {
+                exam.setAutostart(true);
+            }
+            examRepository.save(exam);
         }catch (Exception e){
             e.printStackTrace();
             f=true;

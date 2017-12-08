@@ -17,9 +17,10 @@ public class Test1 {
 
     @Test
     public void testfile(){
-        File file = new File("/exams/testadsdsad/");
+        File file = new File("./exams/testadsdsad/");
         if(!file.exists()){
-
+            file.mkdir();
+            System.out.println("创建成功");
         }
         file.mkdir();
     }
