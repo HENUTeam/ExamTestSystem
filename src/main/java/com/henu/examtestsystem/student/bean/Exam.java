@@ -3,6 +3,7 @@ package com.henu.examtestsystem.student.bean;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -16,19 +17,38 @@ public class Exam {
     @Id
     @GeneratedValue
     private Long id;
+    /**
+     * 考试发起者
+     */
+    @NotNull
+    private String createUser;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date start_date;
+    //答案存放路径 文件夹
     @Column(nullable = false)
-    private Long exam_len; //考试时长
-    @Column(nullable = false)
-    private String path; //答案存放路径 文件夹
-
+    private String path;
     @Column(nullable = false)
     private String paper_path; //试卷存放路径  文件
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ExamState examState;
+
+    /**
+     * 是否上传试卷
+     */
+    private boolean hasPaper;
+    /**
+     * 是否自动开始
+     */
+    private boolean isAutostart;
+    /**
+     * 是否已经归档
+     */
+    private boolean hasStore;
+    /**
+     * 是否清理这次考试
+     */
+    private boolean hasClean;
 
     public String getPaper_path() {
         return paper_path;
@@ -37,7 +57,6 @@ public class Exam {
     public void setPaper_path(String paper_path) {
         this.paper_path = paper_path;
     }
-
 
     public ExamState getExamState() {
         return examState;
@@ -48,21 +67,9 @@ public class Exam {
     }
 
 
-
-
-
-    public Exam(String subject, Date start_date, Long exam_len, String path) {
-        this.subject = subject;
-        this.start_date = start_date;
-        this.exam_len = exam_len;
-        this.path = path;
+    public Exam() {
     }
 
-    public Exam(String subject, Date start_date, Long exam_len) {
-        this.subject = subject;
-        this.start_date = start_date;
-        this.exam_len = exam_len;
-    }
 
     public String getSubject() {
         return subject;
@@ -88,13 +95,6 @@ public class Exam {
         this.start_date = start_date;
     }
 
-    public Long getExam_len() {
-        return exam_len;
-    }
-
-    public void setExam_len(Long exam_len) {
-        this.exam_len = exam_len;
-    }
 
     public String getPath() {
         return path;
@@ -102,5 +102,45 @@ public class Exam {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getCreateUser() {
+        return createUser;
+    }
+
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
+    }
+
+    public boolean isHasPaper() {
+        return hasPaper;
+    }
+
+    public void setHasPaper(boolean hasPaper) {
+        this.hasPaper = hasPaper;
+    }
+
+    public boolean isAutostart() {
+        return isAutostart;
+    }
+
+    public void setAutostart(boolean autostart) {
+        isAutostart = autostart;
+    }
+
+    public boolean isHasStore() {
+        return hasStore;
+    }
+
+    public void setHasStore(boolean hasStore) {
+        this.hasStore = hasStore;
+    }
+
+    public boolean isHasClean() {
+        return hasClean;
+    }
+
+    public void setHasClean(boolean hasClean) {
+        this.hasClean = hasClean;
     }
 }

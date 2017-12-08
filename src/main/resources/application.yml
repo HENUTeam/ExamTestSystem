@@ -31,4 +31,5 @@ spring:
   mvc:
     static-path-pattern: /**
   resources:
-    static-locations: classpath:/templates/,classpath:/static/
+    static-locations: classpath:/templates/,classpath:/static/,classpath:/public/
+filespath: /public/exams

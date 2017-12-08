@@ -1,24 +1,31 @@
 package com.henu.examtestsystem.teacher.controller;
 
 import com.henu.examtestsystem.student.bean.Exam;
+import com.henu.examtestsystem.student.bean.User;
 import com.henu.examtestsystem.student.repository.ExamRepository;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
+import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/teacher")
 public class TeacherController {
+
+    @Value("${filespath}")
+    private String filePath;
+
+    SimpleDateFormat sf =   new SimpleDateFormat( "yyyy-MM-dd HH:mm" );
 
     @Autowired
     ExamRepository examRepository;
@@ -31,25 +38,66 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/exam-before")
-    public ModelAndView beforeexam(){
+    public ModelAndView beforeexam(ModelMap modelMap){
         ModelAndView mv = new ModelAndView();
-        List<Exam> exams = examRepository.findAll();
+        try {
+            List<Exam> exams = examRepository.findAll();
+            modelMap.addAttribute("exams", exams);
+        }catch (Exception e){
+            modelMap.addAttribute("error", true);
+            modelMap.addAttribute("msg","查找所有考试失败");
+        }
         mv.setViewName("/teacher/exam-before");
         return mv;
     }
 
     @RequestMapping(value = "add-exam")
-    public ModelAndView add_exam(String ename, String starttime,
-                                 HttpServletRequest request,  ModelMap modelMap){
+    public ModelAndView add_exam(String ename, String starttime, String eautostart,
+                                 HttpServletRequest request, ModelMap modelMap,
+                                 HttpSession session){
         ModelAndView mv = new ModelAndView();
         boolean f= false;
+
         if(ename==null||ename.length()<=0||
                 starttime.length()<=0||starttime==null){
             f = true;
         }
-        try {
 
+        try {
+            logger.info("ename:{},starttime:{}", ename, starttime);
+            String path = "./" + sf.format(new Date())+ename;
+            String pathAns = path + "/答案";
+//            Exam exam = new Exam();
+//            User user = (User) session.getAttribute("user");
+//            if(user!=null){
+//                exam.setCreateUser(user.getName());
+//            }
+//            Date date = sf.parse(starttime);
+//            exam.setSubject(ename);
+//            exam.setStart_date(date);
+//            exam.setHasClean(false);
+//            exam.setHasStore(false);
+//            exam.setAutostart(false);
+//            exam.setPaper_path(pathAns);
+//            exam.setPath(path);
+//            exam.setExamState(Exam.ExamState.future);
+//            if(eautostart != null){
+//                exam.setAutostart(true);
+//            }
+            java.io.File file = new java.io.File(path);
+            java.io.File fileAns = new java.io.File(pathAns);
+
+            if(!file.exists()){
+                file.mkdir();
+            }
+            if(!fileAns.exists()){
+                fileAns.mkdir();
+            }
+            logger.info("-------====realPath:{},path:{}",
+                    path, session.getServletContext().getRealPath(path));
+            //examRepository.save(exam);
         }catch (Exception e){
+            e.printStackTrace();
             f=true;
         }
         if(f){

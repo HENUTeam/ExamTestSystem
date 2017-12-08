@@ -32,8 +32,9 @@
         <input type="text" name="ename" class="form-control col-sm-3" placeholder="考试名称*" size="20" />
         &nbsp; &nbsp;
         <div class="input-group date form_datetime col-sm-7" id="datepicker"
-             data-date-format="yyyy-mm-dd HH:ii:ss" data-link-field="dtp_input1">
-            <input name="starttime" class="form-control " size="16" type="text" value="" readonly="readonly" placeholder="开始时间" />
+             data-date-format="yyyy-mm-dd HH:ii" data-link-field="dtp_input1">
+            <input name="starttime" class="form-control " size="16" type="text" value=""
+                   readonly="readonly" placeholder="开始时间" />
             <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             <input type="hidden" id="dtp_input1" value="" /><br/>
@@ -57,6 +58,11 @@
             <th>已清理</th>
         </tr>
         </thead>
+        <tr th:each="exam: ${exams} ">
+            <td th:text="${exam.subject}"></td>
+            <td th:text="${exam.start_date}"></td>
+            <td th:text="${exam.createUser}"></td>
+        </tr>
     </table>
 </div>
 
