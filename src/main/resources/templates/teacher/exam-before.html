@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="/css/bs4.css"/>
+    <script th:src="@{/js/bs4.js}" src="/static/js/bs4.js"></script>
+    <link rel="stylesheet" th:href="@{/css/exam.css}" href="/static/css/exam.css"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-datetimepicker.min.css}"
+          href="/static/css/bootstrap-datetimepicker.min.css" media="screen"/>
+    <link th:href="@{/css/bs3.css}" rel="stylesheet" href="/static/css/bs3.css"/>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/bootstrap-datetimepicker.min.js}" src="/static/js/bootstrap-datetimepicker.min.js"></script>
+    <script th:src="@{/js/bootstrap-datetimepicker.zh-CN.js}"
+            src="/static/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+</head>
+<body>
+<div th:replace="/teacher/layout::header"></div>
+
+
+<div class="container">
+    <div th:if="${error}" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>erro!</strong> <span th:text="${msg}">Invalid username or password</span>
+    </div>
+    <form class="exam-form form-inline" action="/teacher/add-exam" enctype="multipart/form-data">
+        <h4>添加考试</h4> &nbsp; &nbsp;
+        <input type="text" name="ename" class="form-control col-sm-3" placeholder="考试名称*" size="20"/>
+        &nbsp; &nbsp;
+        <div class="input-group date form_datetime col-sm-7" id="datepicker"
+             data-date-format="yyyy-mm-dd HH:ii" data-link-field="dtp_input1">
+            <input name="starttime" class="form-control " size="16" type="text" value=""
+                   readonly="readonly" placeholder="开始时间"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            <input type="hidden" id="dtp_input1" value=""/><br/>
+        </div>
+        <input class="form-control" type="checkbox" name="eautostart" value="true"/> 自动开始&nbsp; &nbsp;
+        <input type="submit" class="btn btn-primary" value="添加"/>
+    </form>
+</div>
+<div class="container">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>考试名称</th>
+            <th>考试时间</th>
+            <th>创建人</th>
+            <th>上传试卷</th>
+            <th>自动开始</th>
+            <th>进行中</th>
+            <th>已结束</th>
+            <th>已归档</th>
+            <th>已清理</th>
+        </tr>
+        </thead>
+        <tr th:each="exam: ${exams} ">
+            <td th:text="${exam.subject}"></td>
+            <td th:text="${exam.start_date}"></td>
+            <td th:text="${exam.createUser}"></td>
+        </tr>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $('#datepicker').datetimepicker({
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1,
+        language: 'zh-CN'
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="../../static/css/bs4.css"/>
+    <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
+</head>
+<body>
+
+<div th:fragment="header">
+    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <div class="nav navbar bg-dark navbar-dark navbar-expand-sm">
+        <nav role="navigation" style="padding-left: 10%">
+            <ul class="navbar-nav">
+                <span class="navbar-brand"><strong>上机考试管理系统</strong></span>
+                <li class="nav-item" id="navhome"><a class="nav-link" href="/manager/">
+                    <i class="glyphicon glyphicon-home"></i> 首页</a>
+                </li>
+                <li class="nav-item" id="navteacheradd"><a class="nav-link" href="/manager/teacheradd">
+                    <i class="glyphicon glyphicon-user"></i> 教师管理</a>
+                </li>
+                <li class="nav-item" id="navsolveexam"><a class="nav-link" href="/manager/delectexam">
+                    <i class="glyphicon glyphicon-ban-circle"></i> 考试清理</a>
+                </li>
+                <li class="nav-item" id="navsyssetting">
+                    <a class="nav-link" href="/manager/sysconfig"><i class="glyphicon glyphicon-wrench"></i> 系统配置</a>
+                </li>
+            </ul>
+        </nav>
+        <ul class="navbar-nav" style="margin-left: auto; padding: 0px 10px">
+            <span class="navbar-text">
+                传送门: <strong><a href="/teacher/">教师页面</a></strong> </span>
+            <span class="navbar-text">欢迎你:
+                    <strong>
+                        <strong th:text="${session.user.name}">
+                    </strong>
+                    </strong>
+                   </span>
+            <li class="nav-item"><a class="nav-link" th:href="@{/toEditself}"><i class="glyphicon glyphicon-pencil"></i>修改密码</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout"><i class="glyphicon glyphicon-share"></i>退出</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h1>
+            <img src="/images/manager.png"/> 系统管理
+        </h1>
+        <p th:if="${session.user.name}=='admin'">
+        <div class="exam-alert">没有设置管理员帐号，默认管理员帐号存在安全风险，请尽快处理！</div>
+        <br/>
+        </p>
+    </div>
+</div>
+</body>
+</html>

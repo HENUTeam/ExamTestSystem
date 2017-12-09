@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="copyright">
+    <meta charset="utf-8"/>
+    <title>上机考试管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <style>
+        body {
+            padding-top: 50px;
+            padding-left: 50px;
+        }
+    </style>
+    <!--[if lt IE 9]>
+    <script src="https://apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+    <![endif]-->
+
+</head>
+<body th:fragment="copyright">
+<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">欢迎您， <span th:text="${session.user.name}"/></a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li id="stuInfo"><a href="/student/"><span
+                        class="glyphicon glyphicon-home"></span>个人信息</a></li>
+                <li id="examList"><a th:href="@{/student/exam_list}"><span class="glyphicon glyphicon-th"></span>
+                    开始考试</a></li>
+                <li id="sub"><a th:href="@{/student/sub}"><span class="glyphicon glyphicon-th"></span>
+                    提交列表</a></li>
+            </ul>
+        </div><!-- /.nav-collapse -->
+    </div><!-- /.container -->
+</div>
+<!-- jQuery (Bootstrap 插件需要引入) -->
+<script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+<!-- 包含了所有编译插件 -->
+<script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</body>
+</html>

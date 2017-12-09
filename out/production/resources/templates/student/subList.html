@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style type="text/css">
+        table {
+            width: 100%;
+            border-right: 1px solid;
+            border-bottom: 1px solid;
+            border-collapse: collapse;
+            line-height: 30px;
+        }
+
+        table td {
+            border-left: 1px solid;
+            border-top: 1px solid;
+        }
+
+        table th {
+            border-left: 1px solid;
+            border-top: 1px solid;
+        }
+    </style>
+    <meta charset="utf-8"/>
+    <title></title>
+</head>
+<body style="margin: 0 20%;">
+<div th:replace="/student/header :: copyright"></div>
+<div style="width: 100%;">
+    <h3>已上传文件列表</h3>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>文件名</th>
+            <th>文件大小</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="file: ${files}">
+            <td th:text="${file.key}">neo</td>
+            <td th:text="${file.value}">admin</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div style="width: 100%;">
+    <h3>答案上传</h3><br/>
+    <p>请按照考试要求将答案文件打包，再次进行上传。同名文件多次上传将会覆盖。</p>
+    <form th:action="@{/student/submit}" enctype="multipart/form-data" method="post">
+        <input type="file" name="file"/>
+        <input type="submit" name="btn_shangchuan" value="上传"/>
+    </form>
+</div>
+</body>
+
+</html>

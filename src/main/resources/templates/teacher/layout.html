@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="../../static/css/bs4.css"/>
+    <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
+    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+</head>
+<body>
+<div th:fragment="header">
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <div class="nav navbar bg-dark navbar-dark navbar-expand-sm">
+        <nav role="navigation" style="padding-left: 10%">
+            <ul class="navbar-nav">
+                <span class="navbar-brand"><strong>上机考试管理系统</strong></span>
+                <li class="nav-item"><a class="nav-link" href="/teacher/">
+                    <i class="glyphicon glyphicon-home"></i> 首页</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="/teacher/exam-before">
+                    <i class="glyphicon glyphicon-tint"></i> 考前操作</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                        <i class="glyphicon glyphicon-briefcase"></i> 考中管理
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+
+                            <a class="dropdown-item" th:href="@{/teacher/stu_info}">
+                                <i class="glyphicon glyphicon-star"></i>学生信息</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item" th:href="@{/teacher/ip}">
+                                <i class="glyphicon glyphicon-compressed"></i>解除锁定</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="dropdown-item" th:href="@{/teacher/notf}">
+                                <i class="glyphicon glyphicon-tower"></i>通知管理</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> 考后操作</a>
+                </li>
+            </ul>
+        </nav>
+        <ul class="navbar-nav" style="margin-left: auto; padding: 0px 10px">
+             <span class="navbar-text">
+                传送门: <strong><a href="/student/">学生页面</a></strong> </span>
+            <span class="navbar-text">欢迎你:
+                    <strong>
+                        <strong th:text="${session.user.name}">
+                    </strong>
+                    </strong>
+                   </span>
+            <li class="nav-item"><a class="nav-link" th:href="@{/toEditself}"><i class="glyphicon glyphicon-pencil"></i>修改密码</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout"><i class="glyphicon glyphicon-share"></i>退出</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <h1>
+            <img src="/images/teacher.png"/> 上机考试管理
+        </h1>
+    </div>
+</div>
+</body>
+</html>

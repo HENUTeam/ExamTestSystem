@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
+    <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="../../static/css/bs4.css"/>
+    <link rel="stylesheet" th:href="@{/css/exam.css}" href="../../static/css/exam.css"/>
+    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script>
+        $().ready(function () {
+            $("#navteacheradd").addClass("active");
+        });
+        //点击关闭按钮错误信息隐藏
+    </script>
+</head>
+<body>
+<div th:replace="/manager/layout::header"></div>
+
+<div class="container">
+    <div th:if="${error}" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>erro!</strong> 添加失败
+    </div>
+    <form class="exam-form form-inline" action="/manager/toteaAdd" method="post">
+        <h4>添加教师</h4>
+        <input class="form-control" type="text" name="idnumber" placeholder="用户名*" size="20"/>
+        <input class="form-control" type="text" name="password" placeholder="初始口令*" size="20"/>
+        <input class="form-control" type="text" name="name" placeholder="真实姓名" size="20"/>
+        <input class="form-control" type="checkbox" name="admin" value="admin"/> 管理员&nbsp;
+        <input type="submit" class="btn btn-primary" value="添加"/>
+    </form>
+    <a class="btn btn-primary" href="/manager/list">编辑列表</a>
+
+</div>
+
+<div class="container" style="margin-top: 10px">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>用户名</th>
+            <th>全名</th>
+            <th>是否管理员</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user: ${users}">
+            <th th:text="${user.id}">1</th>
+            <td th:text="${user.idnumber}">neo</td>
+            <td th:text="${user.name}">admin</td>
+            <td>
+                <span th:if="${#strings.length(user.role)}==5" class="glyphicon glyphicon-ok"></span></td>
+            <td>
+                <a class="glyphicon glyphicon-edit" th:href="@{/manager/toEdit(id=${user.id})}"></a>
+                <a class="glyphicon glyphicon-trash" th:href="@{/manager/delete(id=${user.id})}"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
