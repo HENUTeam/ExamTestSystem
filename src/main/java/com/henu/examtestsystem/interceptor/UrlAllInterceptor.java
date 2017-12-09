@@ -11,13 +11,20 @@ import javax.servlet.http.HttpSession;
 
 import com.henu.examtestsystem.student.bean.User;
 
+@Service
 public class UrlAllInterceptor implements HandlerInterceptor {
     Logger logger = LoggerFactory.getLogger(UrlAllInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        //logger.info("---remote:url:{}", request.getRequestURI());
-        // logger.info("---Request:url:{}", request.getRequestURI());
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        String exurls = "/login,/, /css/**, /images/**, /js/**, /exams/**,/files/**,/togo";
+        logger.info("url：{}", request.getRequestURI());
+        if(user==null){
+            response.sendRedirect("/");
+            return false;
+        }
         return true;
     }
 
