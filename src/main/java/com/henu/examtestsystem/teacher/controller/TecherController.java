@@ -12,5 +12,18 @@ public class TecherController {
         return "/teacher/index";
     }
 
+    @RequestMapping(value = "stu_info")
+    public String stuInfo()
+    {
+        return "/teacher/mid-stu-info";
+    }
+    @RequestMapping(value = "ip")
+    public String ip(){
+        return "/teacher/mid-stu-ip";
+    }
+    @RequestMapping(value = "notf")
+    public String noty(){
+        return "/teacher/mid-stu-notify";
+    }
 
 }
