@@ -18,12 +18,17 @@ public class UrlAllInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //logger.info("---remote:url:{}", request.getRequestURI());
         // logger.info("---Request:url:{}", request.getRequestURI());
+
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if(user==null){
+            response.sendRedirect("/login");
+        }
     }
 
     @Override

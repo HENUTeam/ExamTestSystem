@@ -25,11 +25,7 @@
     <img src="/images/stu.jpg" class="image-box"/>
     <div th:if="${error}" class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>erro!</strong> 无效的用户名或密码
-    </div>
-    <div th:if="${stu_error}" class="alert alert-danger alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        <strong>无法登陆!</strong> 当前没有您能参加的考试
+        <strong>erro!</strong> Invalid username or password
     </div>
     <form class="form-horizontal" method="post" th:action="@{/togo}">
         <div class="form-group">
@@ -41,7 +37,7 @@
         <div class="form-group">
             <label for="password" class="col-sm-4 control-label">密码</label>
             <div class="col-sm-10">
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password"/>
+                <input type="password" class="form-control" name="password" id="password" placeholder="密码"/>
             </div>
         </div>
         <div class="form-group text-center">
