@@ -1,5 +1,6 @@
 package com.henu.examtestsystem;
 
+import com.henu.examtestsystem.student.bean.Exam;
 import com.henu.examtestsystem.student.bean.User;
 import com.henu.examtestsystem.student.repository.UserRepository;
 import com.henu.examtestsystem.student.service.MD5Service;
@@ -20,6 +21,7 @@ import org.thymeleaf.spring4.view.ThymeleafView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class LoginController {
@@ -39,6 +41,9 @@ public class LoginController {
         logger.info("----}“{}", error);
         if (key != null && key.equals("error")) {
             model.addAttribute("error", true);
+        }else if(key != null && key.equals("stu_error"))
+        {
+            model.addAttribute("stu_error", true);
         }
         return "index";
     }
@@ -47,6 +52,7 @@ public class LoginController {
     public String go(String name, String password, HttpSession session) {
         User user = userRepository.findByIdnumber(name);
         boolean f = false;
+        boolean flag = true;
         if (user == null) {
             f = true;
         }
@@ -54,6 +60,15 @@ public class LoginController {
             boolean is = MD5Service.checkpassword(password, user.getPassword());
             if (!is) {
                 f = true;
+                flag=false;
+            }else if(user.getRole().equals(User.Role.student))
+            {
+                List<Exam> list = user.getExams();
+                for (Exam e: list) {
+                    if (e.getExamState().equals(Exam.ExamState.now)){
+                        flag=false; break;
+                    }
+                }
             }
         }
         if (f) {
@@ -63,6 +78,7 @@ public class LoginController {
             session.setAttribute("user", user);
             logger.info(user.getPassword());
             if (user.getRole().equals(User.Role.student)) {
+                if (flag) return "redirect:/login?key=stu_error";
                 return "redirect:/student/";
             } else if (user.getRole().equals(User.Role.teacher)) {
                 return "redirect:/teacher/";
