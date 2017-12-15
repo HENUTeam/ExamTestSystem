@@ -9,11 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +26,9 @@ import java.util.List;
 public class TeacherController {
 
     SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+    @Value("${uploadpath}")
+    private String exams_path;
 
     @Autowired
     ExamRepository examRepository;
@@ -48,7 +54,7 @@ public class TeacherController {
         return mv;
     }
 
-    @RequestMapping(value = "add-exam")
+    @RequestMapping(value = "/add-exam")
     public ModelAndView add_exam(String ename, String starttime, String eautostart,
                                  HttpServletRequest request, ModelMap modelMap,
                                  HttpSession session) {
@@ -61,18 +67,20 @@ public class TeacherController {
         }
 
         try {
+
             logger.info("ename:{},starttime:{}", ename, starttime);
-            String path = "./" + sf.format(new Date()) + "_" + ename + "/";
-            path = path.replace(" ", "_");
-            String pathAns = path + "/答案/";
+            String path = exams_path + ename;
+            String pathAns = path + "/答案";
             java.io.File file = new java.io.File(path);
             java.io.File fileAns = new java.io.File(pathAns);
             logger.info("-------====realPath:{},path:{}",
-                    path, session.getServletContext().getRealPath(path));
-//            if(!file.exists()){
-//
-//                file.mkdir();
-//            }
+                    path, "sda");
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            if (!fileAns.exists()) {
+                fileAns.mkdirs();
+            }
             Exam exam = new Exam();
             User user = (User) session.getAttribute("user");
             if (user != null) {
@@ -103,6 +111,40 @@ public class TeacherController {
         } else {
             mv.setViewName("redirect:exam-before");
         }
+        return mv;
+    }
+
+
+    @RequestMapping(value = "/editExam/{id}")
+    public ModelAndView editExam(@PathVariable(value = "id") Long id, ModelMap modelMap) {
+        ModelAndView mv = new ModelAndView();
+        Exam exam = examRepository.findOne(id);
+        modelMap.addAttribute("exam", exam);
+        mv.setViewName("/teacher/editExam");
+        return mv;
+    }
+
+    @RequestMapping(value = "/editExam/{id}/edit")
+    public ModelAndView editExamId(@PathVariable(value = "id") Long id,
+                                   ModelMap modelMap, String ename,
+                                   String starttime, String eautostart) {
+        ModelAndView mv = new ModelAndView();
+        Exam exam = examRepository.findOne(id);
+
+        Date date = null;
+        try {
+            exam.setId(id);
+            date = sf.parse(starttime);
+            exam.setSubject(ename);
+            exam.setStart_date(date);
+            if (eautostart != null) {
+                exam.setAutostart(true);
+            }
+            examRepository.save(exam);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mv.setViewName("redirect:/teacher/editExam/" + id);
         return mv;
     }
 

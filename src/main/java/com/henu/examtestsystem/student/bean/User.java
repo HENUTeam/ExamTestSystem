@@ -29,7 +29,6 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-
     @Column(nullable = false) //注意该getset 方法
     @Enumerated(EnumType.STRING)
     private Role role;

@@ -17,6 +17,7 @@
     <script th:src="@{/js/bootstrap-datetimepicker.min.js}" src="/static/js/bootstrap-datetimepicker.min.js"></script>
     <script th:src="@{/js/bootstrap-datetimepicker.zh-CN.js}"
             src="/static/js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../../static/js/date.js" th:src="@{/js/date.js}"></script>
 
 </head>
 <body>
@@ -32,7 +33,7 @@
         <h4>添加考试</h4> &nbsp; &nbsp;
         <input type="text" name="ename" class="form-control col-sm-3" placeholder="考试名称*" size="20"/>
         &nbsp; &nbsp;
-        <div class="input-group date form_datetime col-sm-7" id="datepicker"
+        <div class="input-group date form_datetime" id="datepicker"
              data-date-format="yyyy-mm-dd HH:ii" data-link-field="dtp_input1">
             <input name="starttime" class="form-control " size="16" type="text" value=""
                    readonly="readonly" placeholder="开始时间"/>
@@ -57,27 +58,36 @@
             <th>已结束</th>
             <th>已归档</th>
             <th>已清理</th>
+            <th>编辑</th>
         </tr>
         </thead>
         <tr th:each="exam: ${exams} ">
             <td th:text="${exam.subject}"></td>
             <td th:text="${exam.start_date}"></td>
             <td th:text="${exam.createUser}"></td>
+            <td>
+                <span th:if="${exam.hasPaper}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <span th:if="${exam.autostart}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <span th:if="${exam.hasPaper}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <span th:if="${exam.hasPaper}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <span th:if="${exam.hasStore}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <span th:if="${exam.hasClean}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <a th:href="@{/teacher/editExam/}+${exam.id}" class="glyphicon glyphicon-edit"></a>
+            </td>
         </tr>
     </table>
 </div>
-
-<script type="text/javascript">
-    $('#datepicker').datetimepicker({
-        weekStart: 1,
-        todayBtn: 1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        forceParse: 0,
-        showMeridian: 1,
-        language: 'zh-CN'
-    });
-</script>
 </body>
 </html>

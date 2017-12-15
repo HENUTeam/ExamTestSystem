@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "exam")
@@ -24,7 +25,7 @@ public class Exam {
      */
     @NotNull
     private String createUser;
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date start_date;
     @Column(nullable = false)
     private String path; //答案存放路径 文件路径 格式"\path1\path\"
@@ -47,7 +48,7 @@ public class Exam {
     /**
      * 是否自动开始
      */
-    private boolean isAutostart;
+    private boolean autostart;
     /**
      * 是否已经归档
      */
@@ -56,6 +57,20 @@ public class Exam {
      * 是否清理这次考试
      */
     private boolean hasClean;
+
+    @OneToMany(cascade = {}, fetch = FetchType.EAGER)
+    @JoinTable(name = "exam_user",
+            joinColumns = {@JoinColumn(name = "exam_id")},
+            inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private List<User> user;
+
+    public List<User> getUser() {
+        return user;
+    }
+
+    public void setUser(List<User> user) {
+        this.user = user;
+    }
 
     public String getPaper_path() {
         return paper_path;
@@ -137,11 +152,11 @@ public class Exam {
     }
 
     public boolean isAutostart() {
-        return isAutostart;
+        return autostart;
     }
 
     public void setAutostart(boolean autostart) {
-        isAutostart = autostart;
+        this.autostart = autostart;
     }
 
     public boolean isHasStore() {
@@ -159,4 +174,6 @@ public class Exam {
     public void setHasClean(boolean hasClean) {
         this.hasClean = hasClean;
     }
+
+
 }

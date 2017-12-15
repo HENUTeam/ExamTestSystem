@@ -4,6 +4,7 @@ server:
     uri-encoding: UTF-8
   session:
     timeout: 10800
+  context-path:
 spring:
   thymeleaf:
     suffix: .html
@@ -32,3 +33,4 @@ spring:
     static-path-pattern: /**
   resources:
     static-locations: classpath:/templates/,classpath:/static/
+uploadpath: ./exams/
