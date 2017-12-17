@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.RequestWrapper;
 import java.io.*;
+import java.net.URLEncoder;
 
 @Controller
 public class UploadController {
@@ -42,15 +43,15 @@ public class UploadController {
         }
     }
 
-    @RequestMapping("download")
-    public static String downLoad(HttpServletResponse response) {
-        String filename = "2.jpg";
-        String filePath = "./exams/Java考试/";
-        File file = new File(filePath + filename);
+
+    public static String downLoad(String filePath, HttpServletResponse response) throws IOException {
+
+        File file = new File(filePath);
         //判断文件父目录是否存在
         if (file.exists()) {
             response.setContentType("application/force-download");
-            response.setHeader("Content-Disposition", "attachment;fileName=" + filename);
+            response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
+            response.setHeader("Content-Type", "text/html;charset=UTF-8");
 
             byte[] buffer = new byte[1024];
             //文件输入流
@@ -58,20 +59,14 @@ public class UploadController {
             BufferedInputStream bis = null;
             //输出流
             OutputStream os = null;
-            try {
-                os = response.getOutputStream();
-                fis = new FileInputStream(file);
-                bis = new BufferedInputStream(fis);
-                int i = bis.read(buffer);
-                while (i != -1) {
-                    os.write(buffer);
-                    i = bis.read(buffer);
-                }
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            os = response.getOutputStream();
+            fis = new FileInputStream(file);
+            bis = new BufferedInputStream(fis);
+            int i = bis.read(buffer);
+            while (i != -1) {
+                os.write(buffer);
+                i = bis.read(buffer);
             }
-            System.out.println("----------file download" + filename);
             try {
                 bis.close();
                 fis.close();

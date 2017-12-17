@@ -5,6 +5,7 @@ import com.henu.examtestsystem.student.bean.User;
 import com.henu.examtestsystem.student.repository.ExamRepository;
 import com.henu.examtestsystem.student.repository.UserRepository;
 import com.henu.examtestsystem.student.service.MD5Service;
+import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,34 +57,34 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/exam-before")
-    public ModelAndView beforeexam(ModelMap modelMap){
+    public ModelAndView beforeexam(ModelMap modelMap) {
         ModelAndView mv = new ModelAndView();
         try {
             List<Exam> exams = examRepository.findAll();
             modelMap.addAttribute("exams", exams);
-        }catch (Exception e){
+        } catch (Exception e) {
             modelMap.addAttribute("error", true);
-            modelMap.addAttribute("msg","查找所有考试失败");
+            modelMap.addAttribute("msg", "查找所有考试失败");
         }
         mv.setViewName("/teacher/exam-before");
         return mv;
     }
 
-    @RequestMapping(value = "add-exam")
+    @RequestMapping(value = "/add-exam")
     public ModelAndView add_exam(String ename, String starttime, String eautostart,
                                  HttpServletRequest request, ModelMap modelMap,
-                                 HttpSession session){
+                                 HttpSession session) {
         ModelAndView mv = new ModelAndView();
-        boolean f= false;
+        boolean f = false;
 
-        if(ename==null||ename.length()<=0||
-                starttime.length()<=0||starttime==null){
+        if (ename == null || ename.length() <= 0 ||
+                starttime.length() <= 0 || starttime == null) {
             f = true;
         }
 
         try {
 
-            logger.info("ename:{},starttime:{}", ename, starttime);
+            logger.info("ename:{},starttime:{},eautostart:{}", ename, starttime, eautostart);
             String path = exams_path + ename + "/";
             String pathAns = path + "答案/";
             java.io.File file = new java.io.File(path);
@@ -295,8 +298,16 @@ public class TeacherController {
     @RequestMapping(value = "exam_upload/{id}")
     @ResponseBody
     public String examUpload(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
-        if (file == null) {
-            return "选中文件为空";
+        String msg = "";
+        try {
+            if (file == null || file.getBytes().length <= 0) {
+                msg = "选中文件为空";
+                return msg + "<a href=\"/teacher/editExam/" + id + "/edit\">考试编辑页面</a>";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            msg = "选中文件为空";
+            return msg + "<a href=\"/teacher/editExam/" + id + "/edit\">考试编辑页面</a>";
         }
         Exam exam = examRepository.findOne(id);
         String path = exam.getPaperPath();
@@ -311,18 +322,44 @@ public class TeacherController {
                     }
                 }
             }
-            File file1 = new File(path + file.getOriginalFilename() + "考试试卷");
+            File file1 = new File(path + "考试试卷" + file.getOriginalFilename());
             try {
                 UploadController.upLoadFile(file1, file);
                 exam.setHasPaper(true);
                 examRepository.save(exam);
-                return "上传成功";
+                msg = "上传成功";
             } catch (Exception e) {
-                return "上传失败";
+                msg = "上传失败";
             }
         }
-        return "上传失败";
+        return msg + "<a href=\"/teacher/editExam/" + id + "/edit\">考试编辑页面</a>";
     }
 
+    @RequestMapping(value = "exam_download/{id}")
+    @ResponseBody
+    public String examUpload(@PathVariable Long id, HttpServletResponse response) {
+        String msg = "";
+        try {
+            Exam exam = examRepository.findOne(id);
+            String path = exam.getPaperPath();
+            File parent = new File(path);
+            if (parent.isDirectory()) {
+                File[] fileList = parent.listFiles();
+                if (fileList != null && fileList.length > 0) {
+                    for (int i = 0; i < fileList.length; i++) {
+                        if (fileList[i].isFile()) {
+                            logger.info("下载文件:{}", fileList[i].getName());
+                            UploadController.downLoad(path + fileList[i].getName(), response);
+                            break;
+                        }
+                    }
+                }
+            }
+            msg = "下载成功";
+        } catch (Exception e) {
+            msg = "下载失败";
+        }
+        return msg + "<a href=\"/teacher/editExam/" + id + "/edit\">考试编辑页面</a>";
+    }
 
 }
