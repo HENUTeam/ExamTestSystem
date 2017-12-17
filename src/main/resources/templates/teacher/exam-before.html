@@ -63,13 +63,13 @@
         </thead>
         <tr th:each="exam: ${exams} ">
             <td th:text="${exam.subject}"></td>
-            <td th:text="${exam.start_date}"></td>
+            <td th:text="${exam.startDate}"></td>
             <td th:text="${exam.createUser}"></td>
             <td>
                 <span th:if="${exam.hasPaper}" class="glyphicon glyphicon-ok"></span>
             </td>
             <td>
-                <span th:if="${exam.autostart}" class="glyphicon glyphicon-ok"></span>
+                <span th:if="${exam.autoStart}" class="glyphicon glyphicon-ok"></span>
             </td>
             <td>
                 <span th:if="${exam.hasPaper}" class="glyphicon glyphicon-ok"></span>
