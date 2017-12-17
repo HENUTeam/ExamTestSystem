@@ -50,6 +50,7 @@ public class LoginController {
     @RequestMapping(value = {"/togo"})
     public String go(String name, String password, HttpSession session) {
         User user = userRepository.findByIdnumber(name);
+
         boolean f = false;
         boolean flag = true;
         if (user == null) {

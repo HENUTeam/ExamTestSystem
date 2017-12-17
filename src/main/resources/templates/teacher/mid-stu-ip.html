@@ -15,5 +15,43 @@
 </head>
 <body>
 <div th:replace="/teacher/layout::header"></div>
+
+<form class="exam-form" style="width: 90%; margin: 0 auto;" th:action="@{/teacher/findStuLogin}"
+      method="post">
+    <h4>查找已登录的学生信息</h4>
+    <input name="idNumber" placeholder="学号"  type="text" />
+    <input name="sname" placeholder="姓名"  type="text" />
+    <button type="submit"  class="btn btn-primary"> <i class="icon-plus"></i> 查找</button>
+</form>
+<br/><br/><br/>
+<form class="exam-form" style="width: 90%; margin: 0 auto;" th:action="@{/teacher/findStuLoginIp}"
+      method="post">
+    <h4>按ip地址查找已登录信息</h4>
+    <input name="ip" type="text" placeholder="ip地址" />
+    <button type="submit"  class="btn btn-primary"> <i class="icon-plus"></i> 查找</button>
+</form>
+<br/><br/><br/>
+
+<table class="table table-bordered" style="width: 90%; margin: 0 auto;">
+    <title>查找结果</title>
+    <thead>
+    <tr>
+        <th>学号</th>
+        <th>姓名</th>
+        <th>ip地址</th>
+        <th>解除绑定</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="stu: ${stus}">
+        <td th:text="${stu.idnumber}">neo</td>
+        <td th:text="${stu.name}">admin</td>
+        <td th:text="${stu.ip}">admin</td>
+        <td><a th:href="@{/teacher/exitip/}+${stu.idnumber}" class="glyphicon glyphicon-edit"></a></td>
+    </tr>
+
+    </tbody>
+</table>
+
 </body>
 </html>

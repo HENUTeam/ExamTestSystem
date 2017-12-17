@@ -3,11 +3,15 @@ package com.henu.examtestsystem.teacher.controller;
 import com.henu.examtestsystem.student.bean.Exam;
 import com.henu.examtestsystem.student.bean.User;
 import com.henu.examtestsystem.student.repository.ExamRepository;
+import com.henu.examtestsystem.student.repository.UserRepository;
+import com.henu.examtestsystem.student.service.MD5Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,19 +26,25 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/teacher")
 public class TeacherController {
 
-    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+   // @Value("${filespath}")
+    //private String filePath;
+    @Autowired
+    private UserRepository userRepository;
+
+    SimpleDateFormat sf =   new SimpleDateFormat( "yyyy-MM-dd HH:mm" );
 
     @Value("${uploadpath}")
     private String exams_path;
 
     @Autowired
-    ExamRepository examRepository;
+    private ExamRepository examRepository;
 
     Logger logger = LoggerFactory.getLogger(TeacherController.class);
 
@@ -44,28 +54,28 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/exam-before")
-    public ModelAndView beforeexam(ModelMap modelMap) {
+    public ModelAndView beforeexam(ModelMap modelMap){
         ModelAndView mv = new ModelAndView();
         try {
             List<Exam> exams = examRepository.findAll();
             modelMap.addAttribute("exams", exams);
-        } catch (Exception e) {
+        }catch (Exception e){
             modelMap.addAttribute("error", true);
-            modelMap.addAttribute("msg", "查找所有考试失败");
+            modelMap.addAttribute("msg","查找所有考试失败");
         }
         mv.setViewName("/teacher/exam-before");
         return mv;
     }
 
-    @RequestMapping(value = "/add-exam")
+    @RequestMapping(value = "add-exam")
     public ModelAndView add_exam(String ename, String starttime, String eautostart,
                                  HttpServletRequest request, ModelMap modelMap,
-                                 HttpSession session) {
+                                 HttpSession session){
         ModelAndView mv = new ModelAndView();
-        boolean f = false;
+        boolean f= false;
 
-        if (ename == null || ename.length() <= 0 ||
-                starttime.length() <= 0 || starttime == null) {
+        if(ename==null||ename.length()<=0||
+                starttime.length()<=0||starttime==null){
             f = true;
         }
 
@@ -115,6 +125,136 @@ public class TeacherController {
             mv.setViewName("redirect:exam-before");
         }
         return mv;
+    }
+
+    /***
+     * 考中增加学生
+     * @param sno
+     * @param sname
+     * @param password
+     * @param session
+     */
+    @RequestMapping(value = "/addStu")
+    public String addStu(String sno,String sname,String password,HttpSession session,ModelMap modelMap)
+    {
+        User user = new User();
+        user.setIdnumber(sno);
+        if(userRepository.findByIdnumber(sno)!=null)
+        {
+            modelMap.addAttribute("error",true);
+            return  "/teacher/mid-stu-info";
+        }
+        user.setName(sname);
+        user.setPassword(MD5Service.EncoderByMd5(password));
+        User tea = (User) session.getAttribute("user");
+        List<Exam> exa = tea.getExams();
+        user.setRole(User.Role.student);
+        if(exa!=null)
+        for (Exam e:exa) {
+            if(e.getExamState().equals(Exam.ExamState.now))
+            {
+                List<Exam> exams = new LinkedList<Exam>();
+                exams.add(e);
+                user.setExams(exams);
+                e.getUser().add(user);
+                examRepository.save(e);
+            }
+        }
+
+        userRepository.save(user);
+        modelMap.addAttribute("error",false);
+        return  "/teacher/mid-stu-info";
+    }
+
+    /***
+     * 考中查询学生信息
+     * @param model
+     * @param idNumber
+     * @param sname
+     * @return
+     */
+    @RequestMapping(value = "/findStu")
+    public String findStu(Model model,String idNumber,String sname)
+    {
+        List<User> stus = null;
+        if(!idNumber.equals("") && !sname.equals(""))
+        {
+            stus = userRepository.findByIdnumberAndName(idNumber,sname);
+        }else if(!idNumber.equals(""))
+        {
+            stus = new LinkedList<User>();
+            User user = userRepository.findByIdnumber(idNumber);
+            if(user!=null)
+            stus.add(user);
+        }else if(!sname.equals(""))
+        {
+            stus = userRepository.findByName(sname);
+        }
+        model.addAttribute("stus",stus);
+        return "teacher/mid-stu-info";
+    }
+
+    @RequestMapping(value = "/findStuLogin")
+    public String findStuLogin(ModelMap model,String idNumber,String sname)
+    {
+        System.out.println(idNumber==null+"wwwwwwwwwwwwwwwww");
+        System.out.println(sname+"wwwwwwwwwwwwwwwww");
+        List<User> stus = null;
+        if(!idNumber.equals("") && !sname.equals(""))
+        {
+            stus = userRepository.findByIdnumberAndNameAndIp(idNumber,sname);
+        }else if(!idNumber.equals(""))
+        {
+            stus = userRepository.findByIdnumberAndIp(idNumber);
+        }else if(!sname.equals(""))
+        {
+            stus = userRepository.findByNameAndIp(sname);
+        }
+        System.out.println(stus.size()+"wwwwwwwwwwwwwwwww");
+        model.addAttribute("stus",stus);
+        return "teacher/mid-stu-ip";
+    }
+
+    @RequestMapping(value = "findStuLoginIp")
+    public String findStuLoginIp(ModelMap model,String ip)
+    {
+        List<User> stus =userRepository.findByIp(ip);
+        model.addAttribute("stus",stus);
+        return "teacher/mid-stu-ip";
+    }
+
+    @RequestMapping(value = "/exitip/{id}")
+    public String exitip(@PathVariable(value = "id") String idNumber) {
+        User user = userRepository.findByIdnumber(idNumber);
+        user.setIp(null);
+        userRepository.save(user);
+        return "teacher/mid-stu-ip";
+    }
+    /***
+     * 考中学生信息查看
+     */
+    @RequestMapping(value = "/info")
+    public String stu_info()
+    {
+        return "/teacher/mid-stu-info";
+    }
+    /***
+     * 考中接触锁定ip
+     */
+    @RequestMapping(value = "/ip")
+    public String stu_ip()
+    {
+        return "/teacher/mid-stu-ip";
+    }
+
+    /***
+     * 考中编辑考试信息
+     * @return
+     */
+    @RequestMapping(value = "/notf")
+    public String stu_notf()
+    {
+        return "/teacher/mid-stu-notify";
     }
 
 

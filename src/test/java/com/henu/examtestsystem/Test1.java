@@ -1,6 +1,9 @@
 package com.henu.examtestsystem;
 
+import com.henu.examtestsystem.student.bean.User;
+import com.henu.examtestsystem.student.repository.UserRepository;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.text.ParseException;
@@ -14,7 +17,16 @@ public class Test1 {
         String[] exurls = "/login,/, /css/**, /images/**, /js/**, /exams/**,/files/**,/togo".split(",");
         System.out.println(exurls);
     }
+    @Autowired
+    UserRepository userRepository;
+    @Test
+    public void test()
+    {
+        User user = userRepository.findByIp("123");
+        if(user==null)
+            System.out.println("#####################");
 
+    }
     @Test
     public void testfile() {
         File file = new File("./exams/testadsdsad/");

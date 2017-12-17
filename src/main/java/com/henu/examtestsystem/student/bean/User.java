@@ -13,13 +13,9 @@ public class User {
     public static enum Sex {
         男, 女;
     }
-
-    ;
-
     public static enum Role {
         student, teacher, admin;
     }
-
     @Id
     @GeneratedValue
     private Long id;
@@ -32,7 +28,7 @@ public class User {
     @Column(nullable = false) //注意该getset 方法
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Column(nullable = false) //注意该getset 方法
+    @Column //注意该getset 方法
     @Enumerated(EnumType.STRING)
     private Sex sex;
     @Column

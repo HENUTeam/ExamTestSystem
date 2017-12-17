@@ -12,16 +12,54 @@
     <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
     <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script>
+        $().ready(function () {
+            $("#navteacheradd").addClass("active");
+        });
+        //点击关闭按钮错误信息隐藏
+    </script>
 </head>
 <body>
 <div th:replace="/teacher/layout::header"></div>
-<form class="exam-form form-inline" action="teacher_manage_student_insert"
+<div th:if="${error}" class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>erro!</strong> <span>该考生已存在</span>
+</div>
+<div th:if="${error==false}" class="alert alert-success alert-dismissable">
+    添加成功
+</div>
+<form class="exam-form" style="width: 90%; margin: 0 auto;" th:action="@{/teacher/addStu}"
       method="post">
     <h4>添加单个学生</h4>
     <input type="text" name="sno" placeholder="学号*" size="20"/>
     <input type="text" name="sname" placeholder="姓名*" size="20"/>
-    <input type="text" name="sclass" placeholder="班级" size="20"/>
+    <input type="text" name="password" placeholder="密码" size="20"/>
     <button type="submit" class="btn btn-primary"><i class="icon-plus"></i> 添加</button>
 </form>
+<br/><br/><br/>
+<form class="exam-form" style="width: 90%; margin: 0 auto;" th:action="@{/teacher/findStu}"
+      method="post">
+    <h4>查找学生信息</h4>
+    <input name="idNumber" placeholder="学号"  type="text" />
+    <input name="sname" placeholder="姓名"  type="text" />
+    <button type="submit"  class="btn btn-primary"> <i class="icon-plus"></i> 查找</button>
+</form>
+<br/><br/><br/>
+<table class="table table-bordered" style="width: 90%; margin: 0 auto;">
+    <title>查找结果</title>
+    <thead>
+    <tr>
+        <th>学号</th>
+        <th>姓名</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="stu: ${stus}">
+        <td th:text="${stu.idnumber}">neo</td>
+        <td th:text="${stu.name}">admin</td>
+    </tr>
+    </tbody>
+</table>
+
 </body>
 </html>

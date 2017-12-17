@@ -7,6 +7,7 @@ import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,7 +61,7 @@ public class StudentController {
      * 跳转到提交列表界面
      */
     @RequestMapping("/sub")
-    public String reds(Model model, HttpSession session) {
+    public String reds(ModelMap model, HttpSession session) {
         List<Pair<String, String>> files = new LinkedList<Pair<String, String>>();
         User user = (User) session.getAttribute("user");
         List<Exam> list = user.getExams();
@@ -75,13 +76,15 @@ public class StudentController {
         path = '.' + path + user.getName();
         File file = new File(path);
         File[] tempList = file.listFiles();
-        for (File f : tempList
-                ) {
-            if (f.isFile()) {
-                files.add(new Pair<String, String>(f.getName().toString(), f.length() + "字节"));
+        if(tempList!=null)
+        for (File f: tempList
+             ) {
+            if (f.isFile())
+            {
+                files.add(new Pair<String ,String>(f.getName().toString(),f.length()+"字节"));
             }
         }
-        model.addAttribute("files", files);
+        model.addAttribute("files",files);
         return "/student/subList";
     }
 
@@ -89,7 +92,7 @@ public class StudentController {
      * 实现文件上传
      * 每个学生上传的答案会存放在以该学生名字命名的文件夹中
      */
-    @RequestMapping(value = "/submit", method = POST)
+    @RequestMapping(value = "/submit",method = POST)
     public String fileUpload(@RequestParam("file") MultipartFile file,
                              HttpSession session) {
         if (file.isEmpty()) {
@@ -107,16 +110,14 @@ public class StudentController {
             }
         }
         if (path == null) return "redirect:/student/sub";
-        path = path + user.getName() + "/";
-        File file1 = new File("." + path);
+        path = path + user.getName() +"/";
+        File file1 = new File("."+path);
 
-        if (!file1.exists()) {
-            file1.mkdirs();
-        }
+        if(!file1.exists()) {file1.mkdirs();}
         try {
             byte[] bytes = file.getBytes();
             BufferedOutputStream stream =
-                    new BufferedOutputStream(new FileOutputStream(new File('.' + path + user.getName() + '_' + name)));
+                    new BufferedOutputStream(new FileOutputStream(new File('.'+path+user.getName()+'_'+ name)));
             stream.write(bytes);
             stream.close();
 
