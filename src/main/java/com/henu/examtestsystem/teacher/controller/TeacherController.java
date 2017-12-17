@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,8 +72,8 @@ public class TeacherController {
         try {
 
             logger.info("ename:{},starttime:{}", ename, starttime);
-            String path = exams_path + ename;
-            String pathAns = path + "/答案";
+            String path = exams_path + ename + "/";
+            String pathAns = path + "答案/";
             java.io.File file = new java.io.File(path);
             java.io.File fileAns = new java.io.File(pathAns);
             logger.info("-------====realPath:{},path:{}",
@@ -88,15 +91,15 @@ public class TeacherController {
             }
             Date date = sf.parse(starttime);
             exam.setSubject(ename);
-            exam.setStart_date(date);
+            exam.setStartDate(date);
             exam.setHasClean(false);
             exam.setHasStore(false);
-            exam.setAutostart(false);
-            exam.setPaper_path(pathAns);
-            exam.setPath(path);
+            exam.setAutoStart(false);
+            exam.setPaperPath(path);
+            exam.setPath(pathAns);
             exam.setExamState(Exam.ExamState.future);
             if (eautostart != null) {
-                exam.setAutostart(true);
+                exam.setAutoStart(true);
             }
             examRepository.save(exam);
         } catch (Exception e) {
@@ -136,9 +139,9 @@ public class TeacherController {
             exam.setId(id);
             date = sf.parse(starttime);
             exam.setSubject(ename);
-            exam.setStart_date(date);
+            exam.setStartDate(date);
             if (eautostart != null) {
-                exam.setAutostart(true);
+                exam.setAutoStart(true);
             }
             examRepository.save(exam);
         } catch (Exception e) {
@@ -146,6 +149,39 @@ public class TeacherController {
         }
         mv.setViewName("redirect:/teacher/editExam/" + id);
         return mv;
+    }
+
+
+    @RequestMapping(value = "exam_upload/{id}")
+    @ResponseBody
+    public String examUpload(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        if (file == null) {
+            return "选中文件为空";
+        }
+        Exam exam = examRepository.findOne(id);
+        String path = exam.getPaperPath();
+        File parent = new File(path);
+        if (parent.isDirectory()) {
+            File[] fileList = parent.listFiles();
+            if (fileList != null && fileList.length > 0) {
+                for (int i = 0; i < fileList.length; i++) {
+                    if (fileList[i].isFile()) {
+                        logger.info("删除文件:{}", fileList[i].getName());
+                        fileList[i].delete();
+                    }
+                }
+            }
+            File file1 = new File(path + file.getOriginalFilename() + "考试试卷");
+            try {
+                UploadController.upLoadFile(file1, file);
+                exam.setHasPaper(true);
+                examRepository.save(exam);
+                return "上传成功";
+            } catch (Exception e) {
+                return "上传失败";
+            }
+        }
+        return "上传失败";
     }
 
 

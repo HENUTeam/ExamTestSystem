@@ -46,7 +46,7 @@ public class StudentController {
                 ) {
             if (e.getExamState().equals(Exam.ExamState.now)) {
                 f = true;
-                fileName = e.getPaper_path();
+                fileName = e.getPaperPath();
             }
         }
         fileName = '.' + fileName;

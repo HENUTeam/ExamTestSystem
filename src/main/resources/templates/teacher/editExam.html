@@ -48,18 +48,18 @@
             <div class="alert navbar-inverse "
                  style="background-color: #eeeeee; margin-top: 20px;">
                 <strong style="margin-left: 20px; font-size: 18px">上传试卷</strong>
-                <div class="navbar navbar-inverse"
-                     style="line-height: 50px;padding-left: 25px;color: white;margin-top: 8px;display: none">
+                <div th:if="${exam.hasPaper}" class="navbar navbar-inverse"
+                     style="line-height: 50px;padding-left: 25px;color: white;margin-top: 8px;">
                     已经上传过试卷，再次上传后原试卷将不可访问<a class="btn btn-default"
-                                            href="../../exam_download" style="margin-left: 10px"><span
+                                            href="/teacher/exam_download" style="margin-left: 10px"><span
                         class="glyphicon glyphicon-eye-open"></span>下载查看</a>
                 </div>
-                <form class="form-inline" role="form" action="../../exam_upload"
+                <form class="form-inline" role="form" th:action="@{/teacher/exam_upload/}+${exam.id}"
                       enctype="multipart/form-data" method="post"
                       style="margin-left: 20px; margin-top: 8px;">
                     <input type="file" id="file" name="file"/>
-                    <button type="submit" onclick="return checkupload()"
-                            style="margin-top: 5px" class="btn btn-info">上传
+                    <button type="submit"
+                            style="margin-top: 5px" class="btn btn-primary">上传
                     </button>
                 </form>
             </div>

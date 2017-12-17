@@ -26,15 +26,16 @@ public class Exam {
     @NotNull
     private String createUser;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private Date start_date;
+    private Date startDate;
     @Column(nullable = false)
-    private String path; //答案存放路径 文件路径 格式"\path1\path\"
-
+    //答案存放路径 文件路径 格式"\path1\path\"
+    private String path;
+    //试卷存放路径  文件 格式 "\path\name.file"
     @Column(nullable = false)
-    private String paper_path; //试卷存放路径  文件 格式 "\path\name.file"
-
+    private String paperPath;
+    //判断教师是否下载答卷
     @Column(nullable = false)
-    boolean is_download; //判断教师是否下载答卷
+    boolean isDownload;
 
 
     @Column(nullable = false)
@@ -48,7 +49,7 @@ public class Exam {
     /**
      * 是否自动开始
      */
-    private boolean autostart;
+    private boolean autoStart;
     /**
      * 是否已经归档
      */
@@ -72,34 +73,7 @@ public class Exam {
         this.user = user;
     }
 
-    public String getPaper_path() {
-        return paper_path;
-    }
-
-    public void setPaper_path(String paper_path) {
-        this.paper_path = paper_path;
-    }
-
-
-    public ExamState getExamState() {
-        return examState;
-    }
-
-    public void setExamState(ExamState examState) {
-        this.examState = examState;
-    }
-
-
     public Exam() {
-    }
-
-
-    public boolean isIs_download() {
-        return is_download;
-    }
-
-    public void setIs_download(boolean is_download) {
-        this.is_download = is_download;
     }
 
     public String getSubject() {
@@ -118,14 +92,21 @@ public class Exam {
         this.id = id;
     }
 
-    public Date getStart_date() {
-        return start_date;
+    public String getCreateUser() {
+        return createUser;
     }
 
-    public void setStart_date(Date start_date) {
-        this.start_date = start_date;
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
     public String getPath() {
         return path;
@@ -135,12 +116,28 @@ public class Exam {
         this.path = path;
     }
 
-    public String getCreateUser() {
-        return createUser;
+    public String getPaperPath() {
+        return paperPath;
     }
 
-    public void setCreateUser(String createUser) {
-        this.createUser = createUser;
+    public void setPaperPath(String paperPath) {
+        this.paperPath = paperPath;
+    }
+
+    public boolean isDownload() {
+        return isDownload;
+    }
+
+    public void setDownload(boolean download) {
+        isDownload = download;
+    }
+
+    public ExamState getExamState() {
+        return examState;
+    }
+
+    public void setExamState(ExamState examState) {
+        this.examState = examState;
     }
 
     public boolean isHasPaper() {
@@ -151,12 +148,12 @@ public class Exam {
         this.hasPaper = hasPaper;
     }
 
-    public boolean isAutostart() {
-        return autostart;
+    public boolean isAutoStart() {
+        return autoStart;
     }
 
-    public void setAutostart(boolean autostart) {
-        this.autostart = autostart;
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
     }
 
     public boolean isHasStore() {
@@ -174,6 +171,4 @@ public class Exam {
     public void setHasClean(boolean hasClean) {
         this.hasClean = hasClean;
     }
-
-
 }

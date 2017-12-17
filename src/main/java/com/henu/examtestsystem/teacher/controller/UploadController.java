@@ -24,45 +24,40 @@ public class UploadController {
     @ResponseBody
     public String testUploadFile(HttpServletRequest req, @RequestParam("file") MultipartFile file) throws IOException {
         File upFile = new File("./exams/Java考试/" + file.getOriginalFilename());
+        return upLoadFile(upFile, file);
+    }
+
+    public static String upLoadFile(File upFile, MultipartFile file) throws IOException {
         if (!upFile.getParentFile().exists()) {
             upFile.getParentFile().mkdirs();
         }
         if (!file.isEmpty()) {
-            try {
-                BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(upFile));
-                stream.write(file.getBytes());
-                stream.close();
-                return "true";
-            } catch (IllegalStateException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return "false";
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return "false";
-            }
+            BufferedOutputStream stream =
+                    new BufferedOutputStream(new FileOutputStream(upFile));
+            stream.write(file.getBytes());
+            stream.close();
+            return "上传成功";
         } else {
-            return "false";
+            return "选中文件为空";
         }
-
     }
 
     @RequestMapping("download")
-    public String downLoad(HttpServletResponse response) {
+    public static String downLoad(HttpServletResponse response) {
         String filename = "2.jpg";
         String filePath = "./exams/Java考试/";
         File file = new File(filePath + filename);
-        if (file.exists()) { //判断文件父目录是否存在
+        //判断文件父目录是否存在
+        if (file.exists()) {
             response.setContentType("application/force-download");
             response.setHeader("Content-Disposition", "attachment;fileName=" + filename);
 
             byte[] buffer = new byte[1024];
-            FileInputStream fis = null; //文件输入流
+            //文件输入流
+            FileInputStream fis = null;
             BufferedInputStream bis = null;
-
-            OutputStream os = null; //输出流
+            //输出流
+            OutputStream os = null;
             try {
                 os = response.getOutputStream();
                 fis = new FileInputStream(file);
