@@ -59,7 +59,7 @@ public class Exam {
      */
     private boolean hasClean;
 
-    @OneToMany(cascade = {}, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {}, fetch = FetchType.EAGER)
     @JoinTable(name = "exam_user",
             joinColumns = {@JoinColumn(name = "exam_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")})

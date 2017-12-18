@@ -1,4 +1,4 @@
-package com.henu.examtestsystem.teacher.controller;
+package com.henu.examtestsystem.teacher.util;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +14,7 @@ import java.io.*;
 import java.net.URLEncoder;
 
 @Controller
-public class UploadController {
+public class UploadUtil {
 
     @RequestMapping(value = "/file")
     public String fileTest() {

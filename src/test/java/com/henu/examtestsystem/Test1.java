@@ -19,14 +19,7 @@ public class Test1 {
     }
     @Autowired
     UserRepository userRepository;
-    @Test
-    public void test()
-    {
-        User user = userRepository.findByIp("123");
-        if(user==null)
-            System.out.println("#####################");
 
-    }
     @Test
     public void testfile() {
         File file = new File("./exams/testadsdsad/");

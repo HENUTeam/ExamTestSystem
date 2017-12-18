@@ -71,8 +71,10 @@
                 <strong style="margin-left: 20px; font-size: 18px">导入学生名单</strong>
                 <form class="form-inline" role="form"
                       style="margin-left: 20px; margin-top: 12px;">
-                    <label style="font-size: 12px">目前设定参加此次考试的学生人数：</label> <span>0</span>
-                    <br/> <a href="search_student.jsp" class="btn btn-info">继续导入</a>
+                    <label style="font-size: 12px">目前设定参加此次考试的学生人数：</label> <strong
+                        th:text="${exam.user.size()}">0</strong>
+                    <br/> <a th:href="@{/teacher/editExam/}+${exam.id}+@{/edit/addStudent}"
+                             class="btn btn-primary">继续导入</a>
                 </form>
             </div>
         </div>

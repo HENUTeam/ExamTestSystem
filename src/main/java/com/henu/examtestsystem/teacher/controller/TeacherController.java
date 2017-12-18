@@ -5,6 +5,10 @@ import com.henu.examtestsystem.student.bean.User;
 import com.henu.examtestsystem.student.repository.ExamRepository;
 import com.henu.examtestsystem.student.repository.UserRepository;
 import com.henu.examtestsystem.student.service.MD5Service;
+import com.henu.examtestsystem.teacher.util.POIUtil;
+import com.henu.examtestsystem.teacher.util.UploadUtil;
+import com.henu.examtestsystem.student.repository.UserRepository;
+import com.henu.examtestsystem.student.service.MD5Service;
 import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,28 +34,27 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
+/**
+ * @author 高逸博
+ */
 @Controller
 @RequestMapping(value = "/teacher")
 public class TeacherController {
 
-   // @Value("${filespath}")
-    //private String filePath;
     @Autowired
     private UserRepository userRepository;
 
-    SimpleDateFormat sf =   new SimpleDateFormat( "yyyy-MM-dd HH:mm" );
+    private SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-    @Value("${uploadpath}")
+    @Value("${uploadPath}")
     private String exams_path;
 
     @Autowired
     private ExamRepository examRepository;
 
-    Logger logger = LoggerFactory.getLogger(TeacherController.class);
+    private Logger logger = LoggerFactory.getLogger(TeacherController.class);
 
     @RequestMapping(value = "/")
     public String home() {
@@ -138,12 +143,10 @@ public class TeacherController {
      * @param session
      */
     @RequestMapping(value = "/addStu")
-    public String addStu(String sno,String sname,String password,HttpSession session,ModelMap modelMap)
-    {
+    public String addStu(String sno,String sname,String password,HttpSession session,ModelMap modelMap) {
         User user = new User();
         user.setIdnumber(sno);
-        if(userRepository.findByIdnumber(sno)!=null)
-        {
+        if(userRepository.findByIdnumber(sno)!=null) {
             modelMap.addAttribute("error",true);
             return  "/teacher/mid-stu-info";
         }
@@ -152,10 +155,8 @@ public class TeacherController {
         User tea = (User) session.getAttribute("user");
         List<Exam> exa = tea.getExams();
         user.setRole(User.Role.student);
-        if(exa!=null)
         for (Exam e:exa) {
-            if(e.getExamState().equals(Exam.ExamState.now))
-            {
+            if(e.getExamState().equals(Exam.ExamState.now)) {
                 List<Exam> exams = new LinkedList<Exam>();
                 exams.add(e);
                 user.setExams(exams);
@@ -177,20 +178,15 @@ public class TeacherController {
      * @return
      */
     @RequestMapping(value = "/findStu")
-    public String findStu(Model model,String idNumber,String sname)
-    {
+    public String findStu(Model model,String idNumber,String sname) {
         List<User> stus = null;
-        if(!idNumber.equals("") && !sname.equals(""))
-        {
+        if(!idNumber.equals("") && !sname.equals("")) {
             stus = userRepository.findByIdnumberAndName(idNumber,sname);
-        }else if(!idNumber.equals(""))
-        {
+        }else if(!idNumber.equals("")) {
             stus = new LinkedList<User>();
             User user = userRepository.findByIdnumber(idNumber);
-            if(user!=null)
             stus.add(user);
-        }else if(!sname.equals(""))
-        {
+        }else if(!sname.equals("")) {
             stus = userRepository.findByName(sname);
         }
         model.addAttribute("stus",stus);
@@ -198,19 +194,15 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/findStuLogin")
-    public String findStuLogin(ModelMap model,String idNumber,String sname)
-    {
+    public String findStuLogin(ModelMap model,String idNumber,String sname) {
         System.out.println(idNumber==null+"wwwwwwwwwwwwwwwww");
         System.out.println(sname+"wwwwwwwwwwwwwwwww");
         List<User> stus = null;
-        if(!idNumber.equals("") && !sname.equals(""))
-        {
+        if(!idNumber.equals("") && !sname.equals("")) {
             stus = userRepository.findByIdnumberAndNameAndIp(idNumber,sname);
-        }else if(!idNumber.equals(""))
-        {
+        }else if(!idNumber.equals("")) {
             stus = userRepository.findByIdnumberAndIp(idNumber);
-        }else if(!sname.equals(""))
-        {
+        }else if(!sname.equals("")) {
             stus = userRepository.findByNameAndIp(sname);
         }
         System.out.println(stus.size()+"wwwwwwwwwwwwwwwww");
@@ -219,8 +211,7 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "findStuLoginIp")
-    public String findStuLoginIp(ModelMap model,String ip)
-    {
+    public String findStuLoginIp(ModelMap model,String ip) {
         List<User> stus =userRepository.findByIp(ip);
         model.addAttribute("stus",stus);
         return "teacher/mid-stu-ip";
@@ -233,20 +224,20 @@ public class TeacherController {
         userRepository.save(user);
         return "teacher/mid-stu-ip";
     }
+
     /***
      * 考中学生信息查看
      */
     @RequestMapping(value = "/info")
-    public String stu_info()
-    {
+    public String stu_info() {
         return "/teacher/mid-stu-info";
     }
+
     /***
      * 考中接触锁定ip
      */
     @RequestMapping(value = "/ip")
-    public String stu_ip()
-    {
+    public String stu_ip() {
         return "/teacher/mid-stu-ip";
     }
 
@@ -255,8 +246,7 @@ public class TeacherController {
      * @return
      */
     @RequestMapping(value = "/notf")
-    public String stu_notf()
-    {
+    public String stu_notf() {
         return "/teacher/mid-stu-notify";
     }
 
@@ -324,7 +314,7 @@ public class TeacherController {
             }
             File file1 = new File(path + "考试试卷" + file.getOriginalFilename());
             try {
-                UploadController.upLoadFile(file1, file);
+                UploadUtil.upLoadFile(file1, file);
                 exam.setHasPaper(true);
                 examRepository.save(exam);
                 msg = "上传成功";
@@ -349,7 +339,7 @@ public class TeacherController {
                     for (int i = 0; i < fileList.length; i++) {
                         if (fileList[i].isFile()) {
                             logger.info("下载文件:{}", fileList[i].getName());
-                            UploadController.downLoad(path + fileList[i].getName(), response);
+                            UploadUtil.downLoad(path + fileList[i].getName(), response);
                             break;
                         }
                     }
@@ -361,5 +351,106 @@ public class TeacherController {
         }
         return msg + "<a href=\"/teacher/editExam/" + id + "/edit\">考试编辑页面</a>";
     }
+
+    @RequestMapping(value = "/editExam/{id}/edit/addStudent")
+    public String addStudent(@PathVariable Long id, ModelMap modelMap,
+                             String sno, String name) {
+
+        Exam exam = examRepository.findOne(id);
+        List<User> stus = exam.getUser();
+        modelMap.addAttribute("stus", stus);
+        modelMap.addAttribute("exam", exam);
+
+        if (sno == null || sno.length() <= 0 || name.length() <= 0) {
+            modelMap.addAttribute("info", "学号和姓名都不能为空");
+        } else {
+            try {
+                addStudent(sno, name, id);
+                modelMap.addAttribute("info", "添加成功！");
+                logger.info("-------------sno:{},name:{},msg:添加成功", sno, name);
+            } catch (Exception e) {
+                e.printStackTrace();
+                modelMap.addAttribute("info", "添加失败！" + e.getMessage());
+            }
+        }
+        return "teacher/addStudent";
+    }
+
+    @RequestMapping(value = "/editExam/{id}/edit/addMany")
+    public String addStudentExcel(@PathVariable Long id, ModelMap modelMap,
+                                  @RequestParam("file") MultipartFile file) {
+        Exam exam = examRepository.findOne(id);
+        List<User> stus = exam.getUser();
+        modelMap.addAttribute("stus", stus);
+        modelMap.addAttribute("exam", exam);
+        try {
+            List<String[]> users = POIUtil.readExcel(file);
+            int success = 0;
+            StringBuilder sbError = new StringBuilder();
+            for (int i = 0; i < users.size(); i++) {
+                String[] user = users.get(i);
+                try {
+                    addStudent(user[0], user[1], id);
+                    success++;
+                } catch (Exception e) {
+                    sbError.append((i + 2) + ",");
+                    e.printStackTrace();
+                }
+            }
+            String s = String.format("共发现%d条数据,成功条数为：%d,不成功行数为：%s", users.size(), success, sbError);
+            modelMap.addAttribute("msgExcel", s);
+        } catch (Exception e) {
+            modelMap.addAttribute("msgExcel", e.getMessage());
+            e.printStackTrace();
+        }
+        return "teacher/addStudent";
+    }
+
+
+    /**
+     * 根据sno，sname和考试的id来添加学生
+     *
+     * @param sno  学号
+     * @param name 姓名
+     * @param id   考试id
+     */
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.DEFAULT)
+    public void addStudent(String sno, String name, Long id) throws Exception {
+        Exam exam = examRepository.findOne(id);
+        User user = userRepository.findByIdnumber(sno);
+        List<Exam> exams = null;
+        if (user == null) {
+            user = new User();
+            exams = new ArrayList<Exam>();
+            user.setRole(User.Role.student);
+            String s = "";
+            if (sno.length() < 4) {
+                s = "1234";
+            } else {
+                s = sno.substring(sno.length() - 4);
+            }
+            user.setIdnumber(sno);
+            user.setPassword(MD5Service.EncoderByMd5(s));
+            user.setName(name);
+            user.setExams(exams);
+            user.setSex(User.Sex.男);
+        }
+        exams = user.getExams();
+        if (!exams.contains(exam)) {
+            exams.add(exam);
+        }
+        user.setExams(exams);
+        userRepository.save(user);
+        List<User> users = exam.getUser();
+        if (users == null) {
+            users = new ArrayList<User>();
+        }
+        if (!users.contains(user)) {
+            users.add(user);
+        }
+        exam.setUser(users);
+        examRepository.save(exam);
+    }
+
 
 }

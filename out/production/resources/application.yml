@@ -33,4 +33,4 @@ spring:
     static-path-pattern: /**
   resources:
     static-locations: classpath:/templates/,classpath:/static/
-uploadpath: ./exams/
+uploadPath: ./exams/

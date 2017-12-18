@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="/css/bs4.css"/>
+    <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
+    <link rel="stylesheet" th:href="@{/css/exam.css}" href="../../static/css/exam.css"/>
+    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div th:replace="/teacher/layout::header"></div>
+
+
+<div class="container">
+    <div class="alert alert-info">
+        考试名称:<strong><span th:text="${exam.subject}"></span></strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        已添加考试人数:<strong><span th:text="${exam.user.size()}"></span>
+        <a th:href="@{/teacher/editExam/}+${exam.id}" style="margin-left: 20px">返回编辑考试页面</a><br/></strong>
+        <div class="card">
+            <div class="card-header">
+                <strong>温馨提示!!!!</strong>
+                添加时候只需要学号和姓名，
+                如果数据库中未查找到该学生信息会自动添加至数据库,
+                密码为学号后四位，如学号不够4位默认为1234<br/>
+                <strong>批量导入时，excel表格中第一列为学号，第二列为姓名，密码如上，默认第一行为标题</strong>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="exam-form">
+        <form class="form-inline"
+              method="post" th:action="@{/teacher/editExam/}+${exam.id}+@{/edit/addStudent}">
+            <h4>添加单个学生</h4>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input class="form-control" type="text" name="sno" placeholder="学号*" size="20"/> &nbsp;&nbsp;&nbsp;&nbsp;
+            <input class="form-control" type="text" name="name" placeholder="姓名*" size="20"/>&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="btn btn-primary" value="添加"/>
+            <strong th:text="${info}" class="text-info">学号和姓名都不能为空</strong>
+        </form>
+        <form class="form-inline" th:action="@{/teacher/editExam/}+${exam.id}+@{/edit/addMany}"
+              enctype="multipart/form-data" method="post">
+            <h4>批量导入学生名单</h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="hidden" name="eid" th:value="${exam.subject}"/>
+            <input type="file" name="file"/>&nbsp;&nbsp;&nbsp;
+            <input type="submit" class="btn btn-primary" value="导入"/>
+            <strong th:text="${msgExcel}" class="text-info">学号和姓名都不能为空</strong>
+        </form>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>学号</th>
+            <th>姓名</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="stu: ${stus} ">
+            <th th:text="${stu.idnumber}"></th>
+            <th th:text="${stu.name}"></th>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+</body>
+</html>
