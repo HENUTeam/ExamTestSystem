@@ -27,7 +27,16 @@
                 </div>
                 <input class="form-control" type="checkbox" name="eautostart" value="true"/> 自动开始&nbsp; &nbsp;
                 <input type="submit" class="btn btn-primary" value="修改"/>
+                <a class="btn btn-primary" th:href="@{/teacher/editExam/start/}+${exam.id}" style="margin-left: 40px;">
+                    <div th:switch="${exam.examState.name()}">
+                        <span th:case="'now'">结束考试</span>
+                        <span th:case="'future'">开始考试</span>
+                        <span th:case="'end'">开始考试</span>
+                    </div>
+                </a>
             </form>
+
+
         </div>
 
         <div class="col-md-12" style="padding-left: 5px; padding-right: 5px;">
@@ -61,20 +70,6 @@
                         th:text="${exam.user.size()}">0</strong>
                     <br/> <a th:href="@{/teacher/editExam/}+${exam.id}+@{/edit/addStudent}"
                              class="btn btn-primary">继续导入</a>
-                </form>
-            </div>
-        </div>
-        <div class="col-md-12" style="padding-left: 5px; padding-right: 5px;">
-            <div class="alert navbar-inverse "
-                 style="background-color: #eeeeee; height: 140px; margin-top: 20px;">
-                <strong style="margin-left: 20px; font-size: 18px">开启考试</strong>
-                <form class="form-inline" role="form" action="../../exam_Start"
-                      style="margin-left: 20px; margin-top: 12px;">
-                    <span style="font-size: 12px; color: #f7AE3F">尚未上传试卷</span> <br/>
-                    <button type="submit" style="margin-top: 12px"
-                            class="btn btn-warning">
-                        <span class="glyphicon glyphicon-off"></span>开启
-                    </button>
                 </form>
             </div>
         </div>

@@ -537,5 +537,16 @@ public class TeacherController {
         return "redirect:/teacher/exam-after";
     }
 
+    @RequestMapping(value = "/editExam/start/{id}")
+    public String startExam(@PathVariable Long id) {
+        Exam exam = examRepository.findOne(id);
+        if (exam.getExamState() == Exam.ExamState.future) {
+            exam.setExamState(Exam.ExamState.now);
+        } else {
+            exam.setExamState(Exam.ExamState.end);
+        }
+        examRepository.save(exam);
+        return "redirect:/teacher/editExam/" + id;
+    }
 
 }
