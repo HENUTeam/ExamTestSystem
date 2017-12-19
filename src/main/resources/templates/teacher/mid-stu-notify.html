@@ -15,5 +15,27 @@
 </head>
 <body>
 <div th:replace="/teacher/layout::header"></div>
+
+<form class="exam-form" style="width: 90%; margin: 0 auto;" th:action="@{/teacher/push_mes}"
+      method="post">
+    <h4>新增通知信息</h4>
+    <input name="mess" type="text" placeholder="通知消息内容" />
+    <button type="submit"  class="btn btn-primary"> <i class="icon-plus"></i> 添加</button>
+</form>
+<br/><br/><br/>
+<table class="table table-bordered" style="width: 90%; margin: 0 auto;">
+    <title>查找结果</title>
+    <thead>
+    <tr>
+        <th>通知内容</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="stu: ${stus}">
+        <td th:text="${stu}">neo</td>
+
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

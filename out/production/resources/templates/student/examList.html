@@ -9,7 +9,7 @@
         <p th:if="${if_paper==false}" id="exam_paper" style="background-color: #555; ">
             本次考试没有电子试卷。
         </p>
-        <a th:if="${if_paper}" class="btn btn-default" th:href="${paper_path}"
+        <a th:if="${if_paper}" class="btn btn-default"  th:href="@{/teacher/exam_download/}+${exam.id}"
            style="margin-left: 10px;"><span
                 class="glyphicon glyphicon-eye-open"></span>下载查看</a>
 
@@ -23,6 +23,8 @@
         </form>
     </div>
 </div>
+
+<div th:replace="/student/message-footer :: footer"></div>
 </body>
 
 </html>

@@ -46,7 +46,8 @@ public class TeacherController {
     @Autowired
     private UserRepository userRepository;
 
-    private SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    public static Map<Long,List<String> > mess_map;
+    private SimpleDateFormat sf =   new SimpleDateFormat( "yyyy-MM-dd HH:mm" );
 
     @Value("${uploadPath}")
     private String exams_path;
@@ -89,7 +90,6 @@ public class TeacherController {
                 starttime.length() <= 0 || starttime == null) {
             f = true;
         }
-
         try {
 
             logger.info("ename:{},starttime:{},eautostart:{}", ename, starttime, eautostart);
@@ -146,10 +146,12 @@ public class TeacherController {
      * @param session
      */
     @RequestMapping(value = "/addStu")
-    public String addStu(String sno,String sname,String password,HttpSession session,ModelMap modelMap) {
+    public String addStu(String sno,String sname,String password,HttpSession session,ModelMap modelMap)
+    {
         User user = new User();
         user.setIdnumber(sno);
-        if(userRepository.findByIdnumber(sno)!=null) {
+        if(userRepository.findByIdnumber(sno)!=null)
+        {
             modelMap.addAttribute("error",true);
             return  "/teacher/mid-stu-info";
         }
@@ -158,8 +160,10 @@ public class TeacherController {
         User tea = (User) session.getAttribute("user");
         List<Exam> exa = tea.getExams();
         user.setRole(User.Role.student);
+        if(exa!=null)
         for (Exam e:exa) {
-            if(e.getExamState().equals(Exam.ExamState.now)) {
+            if(e.getExamState().equals(Exam.ExamState.now))
+            {
                 List<Exam> exams = new LinkedList<Exam>();
                 exams.add(e);
                 user.setExams(exams);
@@ -181,15 +185,20 @@ public class TeacherController {
      * @return
      */
     @RequestMapping(value = "/findStu")
-    public String findStu(Model model,String idNumber,String sname) {
+    public String findStu(Model model,String idNumber,String sname)
+    {
         List<User> stus = null;
-        if(!idNumber.equals("") && !sname.equals("")) {
+        if(!idNumber.equals("") && !sname.equals(""))
+        {
             stus = userRepository.findByIdnumberAndName(idNumber,sname);
-        }else if(!idNumber.equals("")) {
+        }else if(!idNumber.equals(""))
+        {
             stus = new LinkedList<User>();
             User user = userRepository.findByIdnumber(idNumber);
+            if(user!=null)
             stus.add(user);
-        }else if(!sname.equals("")) {
+        }else if(!sname.equals(""))
+        {
             stus = userRepository.findByName(sname);
         }
         model.addAttribute("stus",stus);
@@ -197,24 +206,26 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/findStuLogin")
-    public String findStuLogin(ModelMap model,String idNumber,String sname) {
-        System.out.println(idNumber==null+"wwwwwwwwwwwwwwwww");
-        System.out.println(sname+"wwwwwwwwwwwwwwwww");
+    public String findStuLogin(ModelMap model,String idNumber,String sname)
+    {
         List<User> stus = null;
-        if(!idNumber.equals("") && !sname.equals("")) {
+        if(!idNumber.equals("") && !sname.equals(""))
+        {
             stus = userRepository.findByIdnumberAndNameAndIp(idNumber,sname);
-        }else if(!idNumber.equals("")) {
+        }else if(!idNumber.equals(""))
+        {
             stus = userRepository.findByIdnumberAndIp(idNumber);
-        }else if(!sname.equals("")) {
+        }else if(!sname.equals(""))
+        {
             stus = userRepository.findByNameAndIp(sname);
         }
-        System.out.println(stus.size()+"wwwwwwwwwwwwwwwww");
         model.addAttribute("stus",stus);
         return "teacher/mid-stu-ip";
     }
 
     @RequestMapping(value = "findStuLoginIp")
-    public String findStuLoginIp(ModelMap model,String ip) {
+    public String findStuLoginIp(ModelMap model,String ip)
+    {
         List<User> stus =userRepository.findByIp(ip);
         model.addAttribute("stus",stus);
         return "teacher/mid-stu-ip";
@@ -228,11 +239,39 @@ public class TeacherController {
         return "teacher/mid-stu-ip";
     }
 
+    @RequestMapping(value = "/push_mes")
+    public String push_mes(ModelMap model,HttpSession session,String mess)
+    {
+        if(mess_map==null) mess_map=new HashMap<Long, List<String>>();
+        User  user = (User)session.getAttribute("user");
+        Long id=new Long(0);
+        for (Exam e: user.getExams()
+             ) {
+            if (e.getExamState()==Exam.ExamState.now)
+            {
+                id=e.getId();
+            }
+        }
+        if (mess_map.containsKey(id))
+        {
+            if(mess!=null&&!mess.equals(""))
+            mess_map.get(id).add(mess);
+        }else
+        {
+            List<String> list = new LinkedList<String>();
+            if(mess!=null&&!mess.equals(""))
+            list.add(mess);
+            mess_map.put(id,list);
+        }
+        model.addAttribute("stus",mess_map.get(id));
+        return "teacher/mid-stu-notify";
+    }
     /***
      * 考中学生信息查看
      */
     @RequestMapping(value = "/info")
-    public String stu_info() {
+    public String stu_info()
+    {
         return "/teacher/mid-stu-info";
     }
 
@@ -240,7 +279,8 @@ public class TeacherController {
      * 考中接触锁定ip
      */
     @RequestMapping(value = "/ip")
-    public String stu_ip() {
+    public String stu_ip()
+    {
         return "/teacher/mid-stu-ip";
     }
 
@@ -249,8 +289,9 @@ public class TeacherController {
      * @return
      */
     @RequestMapping(value = "/notf")
-    public String stu_notf() {
-        return "/teacher/mid-stu-notify";
+    public String stu_notf()
+    {
+        return "redirect:/teacher/push_mes";
     }
 
 

@@ -3,6 +3,7 @@ package com.henu.examtestsystem.student.controller;
 import com.henu.examtestsystem.student.bean.Exam;
 import com.henu.examtestsystem.student.bean.User;
 import com.henu.examtestsystem.student.repository.UserRepository;
+import com.henu.examtestsystem.teacher.controller.TeacherController;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,17 +43,16 @@ public class StudentController {
         boolean f = false;
         User user = (User) session.getAttribute("user");
         List<Exam> list = user.getExams();
-        String fileName = null;
+        Exam exam = null;
         for (Exam e : list
                 ) {
-            if (e.getExamState().equals(Exam.ExamState.now)) {
+            if (e.getExamState()==Exam.ExamState.now) {
                 f = true;
-                fileName = e.getPaperPath();
+                exam=e;break;
             }
         }
-        fileName = '.' + fileName;
-        model.addAttribute("paper_path", fileName);
         model.addAttribute("if_paper", f);
+        model.addAttribute("exam",exam);
         return "/student/examList";
     }
 
@@ -126,6 +126,30 @@ public class StudentController {
         }
         return "redirect:/student/sub";
     }
-
+    @RequestMapping(value = "get_mess")
+    public @ResponseBody String get_mess( HttpSession session){
+        User user=(User)session.getAttribute("user");
+        Long id = new Long(0);
+        for (Exam e: user.getExams()
+             ) {
+            if(e.getExamState()==Exam.ExamState.now){
+                id = e.getId();
+            }
+        }
+        List<String> list =null;
+        if(TeacherController.mess_map!=null&&TeacherController.mess_map.containsKey(id))
+        {
+            list = TeacherController.mess_map.get(id);
+        }
+        String mess="";
+        if(list!=null)
+        {
+            for (String str:list
+                 ) {
+                mess+=str+"\n";
+            }
+        }
+        return mess;
+    }
 
 }
