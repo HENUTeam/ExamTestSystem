@@ -35,7 +35,7 @@ public class Exam {
     private String paperPath;
     //判断教师是否下载答卷
     @Column(nullable = false)
-    boolean isDownload;
+    private boolean isDownload;
 
 
     @Column(nullable = false)

@@ -51,6 +51,9 @@ public class TeacherController {
     @Value("${uploadPath}")
     private String exams_path;
 
+    @Value("${zipPath}")
+    private String zipPath;
+
     @Autowired
     private ExamRepository examRepository;
 
@@ -450,6 +453,47 @@ public class TeacherController {
         }
         exam.setUser(users);
         examRepository.save(exam);
+    }
+
+
+    @RequestMapping(value = "exam-after")
+    public ModelAndView exam_after(ModelMap modelMap) {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("teacher/exam-after");
+        try {
+            //查找所有的考试并传送到前台页面
+            List<Exam> exams = examRepository.findAll();
+            modelMap.addAttribute("exams", exams);
+        } catch (Exception e) {
+            modelMap.addAttribute("error", true);
+            modelMap.addAttribute("msg", "查找所有考试失败");
+        }
+        return mv;
+    }
+
+    @RequestMapping(value = "exam-after/zip/{id}")
+    public String zipExam(@PathVariable Long id, HttpServletResponse response) {
+        Exam exam = examRepository.findOne(id);
+        String path = exam.getPaperPath();
+        String[] names = path.split("/");
+        String name = names[names.length - 1];
+        String target = zipPath + name + ".zip";
+        String source = path;
+        try {
+            File file = new File(target);
+            if (file.exists()) {
+                file.delete();
+            }
+            UploadUtil.compressedFile(source, zipPath);
+            UploadUtil.downLoad(target, response);
+            logger.info("==========target:{}", target);
+            exam.setHasStore(true);
+            exam.setHasClean(true);
+            examRepository.save(exam);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/teacher/exam-after";
     }
 
 

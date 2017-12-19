@@ -34,3 +34,4 @@ spring:
   resources:
     static-locations: classpath:/templates/,classpath:/static/
 uploadPath: ./exams/
+zipPath: ./exams/zip/

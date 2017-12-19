@@ -2,19 +2,30 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
-    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
-    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="../../static/css/bs4.css"/>
-    <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
-    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
+    <span th:fragment="link">
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
+        <link rel="stylesheet" th:href="@{/css/bs4.css}" href="/css/bs4.css"/>
+        <script th:src="@{/js/bs4.js}" src="/static/js/bs4.js"></script>
+        <link rel="stylesheet" th:href="@{/css/exam.css}" href="/static/css/exam.css"/>
+        <link rel="stylesheet" th:href="@{/css/bootstrap-datetimepicker.min.css}"
+              href="/static/css/bootstrap-datetimepicker.min.css" media="screen"/>
+        <link th:href="@{/css/bs3.css}" rel="stylesheet" href="/static/css/bs3.css"/>
+        <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+        <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+        <script th:src="@{/js/bootstrap-datetimepicker.min.js}"
+                src="/static/js/bootstrap-datetimepicker.min.js"></script>
+        <script th:src="@{/js/bootstrap-datetimepicker.zh-CN.js}"
+                src="/static/js/bootstrap-datetimepicker.zh-CN.js"></script>
+        <script src="../../static/js/date.js" th:src="@{/js/date.js}"></script>
+        <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    </span>
 
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
-    <title>Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <!-- 新 Bootstrap4 核心 CSS 文件 -->
 </head>
 <body>
 <div th:fragment="header">
-    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <div class="nav navbar bg-dark navbar-dark navbar-expand-sm">
         <nav role="navigation" style="padding-left: 10%">
             <ul class="navbar-nav">
@@ -47,7 +58,8 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#"><i class="glyphicon glyphicon-exclamation-sign"></i> 考后操作</a>
+                    <a class="nav-link" href="/teacher/exam-after"><i class="glyphicon glyphicon-exclamation-sign"></i>
+                        考后操作</a>
                 </li>
             </ul>
         </nav>

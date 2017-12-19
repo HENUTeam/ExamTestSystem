@@ -1,22 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
     <title>Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <!-- 新 Bootstrap4 核心 CSS 文件 -->
-    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
-    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="/css/bs4.css"/>
-    <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
-    <link rel="stylesheet" th:href="@{/css/exam.css}" href="../../static/css/exam.css"/>
-    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
-    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <div th:replace="/teacher/layout::link">
+
+    </div>
 </head>
 <body>
 <div th:replace="/teacher/layout::header"></div>
-
 <div class="container container-fluid">
     <div style="margin: 1px auto;">
         <div class="col-sm-3 exam-desc">
