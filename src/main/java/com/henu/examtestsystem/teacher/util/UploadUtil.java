@@ -52,8 +52,8 @@ public class UploadUtil {
         //判断文件父目录是否存在
         if (file.exists()) {
             response.setContentType("application/force-download");
-            response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
-            response.setHeader("Content-Type", "text/html;charset=UTF-8");
+            response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + URLEncoder.encode(filePath, "UTF-8"));
+            response.setContentType("application/octet-stream");
             response.setCharacterEncoding("utf-8");
             byte[] buffer = new byte[1024];
             //文件输入流
