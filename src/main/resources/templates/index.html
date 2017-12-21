@@ -29,6 +29,10 @@
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <strong>无法登陆!</strong> 当前没有您能参加的考试
     </div>
+    <div th:if="${stu_iperror}" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>无法登陆!</strong> ip地址不对，请联系监考老师
+    </div>
     <form class="form-horizontal" method="post" th:action="@{/togo}">
         <div class="form-group">
             <label for="name" class="col-sm-4 control-label">用户名</label>

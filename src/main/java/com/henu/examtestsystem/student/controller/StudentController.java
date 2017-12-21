@@ -1,7 +1,9 @@
 package com.henu.examtestsystem.student.controller;
 
 import com.henu.examtestsystem.student.bean.Exam;
+import com.henu.examtestsystem.student.bean.Message;
 import com.henu.examtestsystem.student.bean.User;
+import com.henu.examtestsystem.student.repository.ExamRepository;
 import com.henu.examtestsystem.student.repository.UserRepository;
 import com.henu.examtestsystem.teacher.controller.TeacherController;
 import javafx.util.Pair;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.bind.SchemaOutputResolver;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +33,8 @@ public class StudentController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    ExamRepository examRepository;
     @RequestMapping(value = "/")
     public String home() {
         return "/student/index";
@@ -47,7 +52,7 @@ public class StudentController {
         for (Exam e : list
                 ) {
             if (e.getExamState()==Exam.ExamState.now) {
-                f = true;
+                f=e.isHasPaper();
                 exam=e;break;
             }
         }
@@ -73,7 +78,7 @@ public class StudentController {
                 break;
             }
         }
-        path = '.' + path + user.getName();
+        path = path + user.getName();
         File file = new File(path);
         File[] tempList = file.listFiles();
         if(tempList!=null)
@@ -111,13 +116,13 @@ public class StudentController {
         }
         if (path == null) return "redirect:/student/sub";
         path = path + user.getName() +"/";
-        File file1 = new File("."+path);
+        File file1 = new File(path);
 
         if(!file1.exists()) {file1.mkdirs();}
         try {
             byte[] bytes = file.getBytes();
             BufferedOutputStream stream =
-                    new BufferedOutputStream(new FileOutputStream(new File('.'+path+user.getName()+'_'+ name)));
+                    new BufferedOutputStream(new FileOutputStream(new File(path+user.getName()+'_'+ name)));
             stream.write(bytes);
             stream.close();
 
@@ -137,9 +142,9 @@ public class StudentController {
             }
         }
         List<String> list =null;
-        if(TeacherController.mess_map!=null&&TeacherController.mess_map.containsKey(id))
+        if(TeacherController.map_mess!=null&&TeacherController.map_mess.containsKey(id))
         {
-            list = TeacherController.mess_map.get(id);
+            list = TeacherController.map_mess.get(id);
         }
         String mess="";
         if(list!=null)
@@ -150,6 +155,25 @@ public class StudentController {
             }
         }
         return mess;
+    }
+
+    @RequestMapping(value = "is_end")
+    public @ResponseBody String is_end(HttpSession session)
+    {
+        User user = (User) session.getAttribute("user");
+        for (Exam e: user.getExams()
+             ) {
+            if(examRepository.findOne(e.getId()).getExamState().equals(Exam.ExamState.now))
+            {
+                return "true";
+            }
+        }
+        return  "false";
+    }
+    @RequestMapping(value = "end",method = POST)
+    public void end(HttpSession session)
+    {
+        session.removeAttribute("user");
     }
 
 }

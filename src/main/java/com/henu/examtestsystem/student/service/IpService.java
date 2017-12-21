@@ -12,7 +12,7 @@ public class IpService {
      *
      * @return ip
      */
-    public String getIpAddr(HttpServletRequest request) {
+    public static String getIpAddr(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         //System.out.println("x-forwarded-for ip: " + ip);
         if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {

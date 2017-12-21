@@ -65,6 +65,8 @@ public class Exam {
             inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> user;
 
+
+
     public List<User> getUser() {
         return user;
     }

@@ -3,6 +3,7 @@ package com.henu.examtestsystem;
 import com.henu.examtestsystem.student.bean.Exam;
 import com.henu.examtestsystem.student.bean.User;
 import com.henu.examtestsystem.student.repository.UserRepository;
+import com.henu.examtestsystem.student.service.IpService;
 import com.henu.examtestsystem.student.service.MD5Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,12 +44,15 @@ public class LoginController {
             model.addAttribute("error", true);
         } else if (key != null && key.equals("stu_error")) {
             model.addAttribute("stu_error", true);
+        }else if(key!=null&&key.equals("stu_iperror"))
+        {
+            model.addAttribute("stu_iperror",true);
         }
         return "index";
     }
 
     @RequestMapping(value = {"/togo"})
-    public String go(String name, String password, HttpSession session) {
+    public String go(HttpServletRequest request,String name, String password, HttpSession session) {
         User user = userRepository.findByIdnumber(name);
 
         boolean f = false;
@@ -62,6 +66,14 @@ public class LoginController {
                 f = true;
                 flag = false;
             } else if (user.getRole().equals(User.Role.student)) {
+                String ip = IpService.getIpAddr(request);
+                if(user.getIp()!=null && user.getIp() != ip)
+                    return "redirect:/login?key=stu_iperror";
+                else if(user.getIp()==null)
+                {
+                    user.setIp(ip);
+                    userRepository.save(user);
+                }
                 List<Exam> list = user.getExams();
                 for (Exam e : list) {
                     if (e.getExamState().equals(Exam.ExamState.now)) {

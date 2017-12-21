@@ -2,6 +2,7 @@ package com.henu.examtestsystem.teacher.controller;
 
 import com.henu.examtestsystem.student.bean.Exam;
 import com.henu.examtestsystem.student.bean.User;
+import com.henu.examtestsystem.student.bean.Message;
 import com.henu.examtestsystem.student.repository.ExamRepository;
 import com.henu.examtestsystem.student.repository.UserRepository;
 import com.henu.examtestsystem.student.service.MD5Service;
@@ -27,6 +28,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -46,7 +49,7 @@ public class TeacherController {
     @Autowired
     private UserRepository userRepository;
 
-    public static Map<Long,List<String> > mess_map;
+    public static Map<Long,List<String>> map_mess;
     private SimpleDateFormat sf =   new SimpleDateFormat( "yyyy-MM-dd HH:mm" );
 
     @Value("${uploadPath}")
@@ -90,8 +93,8 @@ public class TeacherController {
                 starttime.length() <= 0 || starttime == null) {
             f = true;
         }
+        Exam exam = new Exam();
         try {
-
             logger.info("ename:{},starttime:{},eautostart:{}", ename, starttime, eautostart);
             String path = exams_path + ename + "/";
             String pathAns = path + "答案/";
@@ -105,7 +108,7 @@ public class TeacherController {
             if (!fileAns.exists()) {
                 fileAns.mkdirs();
             }
-            Exam exam = new Exam();
+
             User user = (User) session.getAttribute("user");
             if (user != null) {
                 exam.setCreateUser(user.getName());
@@ -133,6 +136,9 @@ public class TeacherController {
             logger.info("f:{},msg:{}", f, "失败");
             mv.setViewName("/teacher/exam-before");
         } else {
+            User user = (User)session.getAttribute("user");
+            user.getExams().add(exam);
+            userRepository.save(user);
             mv.setViewName("redirect:exam-before");
         }
         return mv;
@@ -148,30 +154,30 @@ public class TeacherController {
     @RequestMapping(value = "/addStu")
     public String addStu(String sno,String sname,String password,HttpSession session,ModelMap modelMap)
     {
-        User user = new User();
-        user.setIdnumber(sno);
-        if(userRepository.findByIdnumber(sno)!=null)
+        User user = userRepository.findByIdnumber(sno);
+        if(user==null)
         {
-            modelMap.addAttribute("error",true);
-            return  "/teacher/mid-stu-info";
+            user = new User();
+            user.setIdnumber(sno);
+            user.setRole(User.Role.student);
+            List<Exam> exams = new LinkedList<Exam>();
+            user.setExams(exams);
         }
         user.setName(sname);
         user.setPassword(MD5Service.EncoderByMd5(password));
         User tea = (User) session.getAttribute("user");
         List<Exam> exa = tea.getExams();
-        user.setRole(User.Role.student);
+        List<Exam> exams =  user.getExams();
         if(exa!=null)
         for (Exam e:exa) {
             if(e.getExamState().equals(Exam.ExamState.now))
             {
-                List<Exam> exams = new LinkedList<Exam>();
                 exams.add(e);
                 user.setExams(exams);
                 e.getUser().add(user);
                 examRepository.save(e);
             }
         }
-
         userRepository.save(user);
         modelMap.addAttribute("error",false);
         return  "/teacher/mid-stu-info";
@@ -242,28 +248,29 @@ public class TeacherController {
     @RequestMapping(value = "/push_mes")
     public String push_mes(ModelMap model,HttpSession session,String mess)
     {
-        if(mess_map==null) mess_map=new HashMap<Long, List<String>>();
+        if(map_mess==null) map_mess=new HashMap<Long, List<String>>();
         User  user = (User)session.getAttribute("user");
         Long id=new Long(0);
         for (Exam e: user.getExams()
              ) {
             if (e.getExamState()==Exam.ExamState.now)
             {
+
                 id=e.getId();
             }
         }
-        if (mess_map.containsKey(id))
+        if (map_mess.containsKey(id))
         {
             if(mess!=null&&!mess.equals(""))
-            mess_map.get(id).add(mess);
+                map_mess.get(id).add(mess);
         }else
         {
             List<String> list = new LinkedList<String>();
             if(mess!=null&&!mess.equals(""))
             list.add(mess);
-            mess_map.put(id,list);
+            map_mess.put(id,list);
         }
-        model.addAttribute("stus",mess_map.get(id));
+        model.addAttribute("stus",map_mess.get(id));
         return "teacher/mid-stu-notify";
     }
     /***
