@@ -1,5 +1,7 @@
 package com.henu.examtestsystem.teacher.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +19,8 @@ import java.util.zip.ZipOutputStream;
 
 @Controller
 public class UploadUtil {
+
+    private static Logger logger = LoggerFactory.getLogger(UploadUtil.class);
 
     @RequestMapping(value = "/file")
     public String fileTest() {
@@ -49,10 +53,12 @@ public class UploadUtil {
     public static String downLoad(String filePath, HttpServletResponse response) throws IOException {
 
         File file = new File(filePath);
+        logger.info("---------------:file:{}", filePath);
         //判断文件父目录是否存在
         if (file.exists()) {
-            response.setContentType("application/force-download");
-            response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + URLEncoder.encode(filePath, "UTF-8"));
+            String[] names = filePath.split("/");
+            String fileName = names[names.length - 1];
+            response.setHeader("Content-Disposition", "attachment;filename*=UTF-8''" + URLEncoder.encode(fileName, "UTF-8"));
             response.setContentType("application/octet-stream");
             response.setCharacterEncoding("utf-8");
             byte[] buffer = new byte[1024];
