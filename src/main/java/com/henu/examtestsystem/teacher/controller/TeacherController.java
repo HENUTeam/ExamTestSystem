@@ -8,9 +8,6 @@ import com.henu.examtestsystem.student.repository.UserRepository;
 import com.henu.examtestsystem.student.service.MD5Service;
 import com.henu.examtestsystem.teacher.util.POIUtil;
 import com.henu.examtestsystem.teacher.util.UploadUtil;
-import com.henu.examtestsystem.student.repository.UserRepository;
-import com.henu.examtestsystem.student.service.MD5Service;
-import com.sun.deploy.net.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -250,7 +247,7 @@ public class TeacherController {
     {
         if(map_mess==null) map_mess=new HashMap<Long, List<String>>();
         User  user = (User)session.getAttribute("user");
-        Long id=new Long(0);
+        Long id= Long.valueOf((0));
         for (Exam e: user.getExams()
              ) {
             if (e.getExamState()==Exam.ExamState.now)

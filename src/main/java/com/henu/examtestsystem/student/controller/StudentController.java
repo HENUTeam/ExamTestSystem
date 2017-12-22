@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.jws.soap.SOAPBinding;
-import javax.servlet.http.HttpServletResponse;
+
 import javax.servlet.http.HttpSession;
 import javax.xml.bind.SchemaOutputResolver;
 import java.io.*;
@@ -134,7 +133,7 @@ public class StudentController {
     @RequestMapping(value = "get_mess")
     public @ResponseBody String get_mess( HttpSession session){
         User user=(User)session.getAttribute("user");
-        Long id = new Long(0);
+        Long id = Long.valueOf(0);
         for (Exam e: user.getExams()
              ) {
             if(e.getExamState()==Exam.ExamState.now){
