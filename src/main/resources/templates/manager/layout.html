@@ -8,12 +8,19 @@
     <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
     <link rel="stylesheet" th:href="@{/css/bs4.css}" href="../../static/css/bs4.css"/>
     <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
 <div th:fragment="header">
-    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
+    <link th:src="@{/css/bs3.css}" rel="stylesheet" src="../../static/css/bs3.css"/>
     <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"/>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <div class="nav navbar bg-dark navbar-dark navbar-expand-sm">
         <nav role="navigation" style="padding-left: 10%">
             <ul class="navbar-nav">
@@ -33,8 +40,13 @@
             </ul>
         </nav>
         <ul class="navbar-nav" style="margin-left: auto; padding: 0px 10px">
-            <span class="navbar-text">
-                传送门: <strong><a href="/teacher/">教师页面</a></strong> </span>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><strong>其它功能</strong></a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/teacher/">教师功能</a>
+                    <a class="dropdown-item" href="/student/">学生功能</a></div>
+            </li>
+            >
             <span class="navbar-text">欢迎你:
                     <strong>
                         <strong th:text="${session.user.name}">

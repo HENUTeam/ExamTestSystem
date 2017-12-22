@@ -42,6 +42,8 @@ public class Exam {
     @Enumerated(EnumType.STRING)
     private ExamState examState;
 
+    private boolean isShow;
+
     /**
      * 是否上传试卷
      */
@@ -172,5 +174,13 @@ public class Exam {
 
     public void setHasClean(boolean hasClean) {
         this.hasClean = hasClean;
+    }
+
+    public boolean isShow() {
+        return isShow;
+    }
+
+    public void setShow(boolean show) {
+        isShow = show;
     }
 }

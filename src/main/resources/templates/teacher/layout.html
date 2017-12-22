@@ -64,8 +64,13 @@
             </ul>
         </nav>
         <ul class="navbar-nav" style="margin-left: auto; padding: 0px 10px">
-             <span class="navbar-text">
-                传送门: <strong><a href="/student/">学生页面</a></strong> </span>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><strong>其它功能</strong></a>
+                <div class="dropdown-menu">
+                    <a th:if="${session.user.role.name()=='admin'}" class="dropdown-item" href="/manager/">管理员功能</a>
+                    <a class="dropdown-item" href="/student/">学生功能</a></div>
+            </li>
+            >
             <span class="navbar-text">欢迎你:
                     <strong>
                         <strong th:text="${session.user.name}">

@@ -35,6 +35,7 @@ public class UploadUtil {
 
     public static String upLoadFile(File upFile, MultipartFile file) throws IOException {
         if (!upFile.getParentFile().exists()) {
+            logger.info("------UploadUtil----" + upFile.getParentFile());
             upFile.getParentFile().mkdirs();
         }
         if (!file.isEmpty()) {

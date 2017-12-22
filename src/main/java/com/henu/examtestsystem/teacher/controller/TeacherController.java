@@ -111,6 +111,7 @@ public class TeacherController {
                 exam.setCreateUser(user.getName());
             }
             Date date = sf.parse(starttime);
+            exam.setShow(true);
             exam.setSubject(ename);
             exam.setStartDate(date);
             exam.setHasClean(false);
@@ -350,6 +351,9 @@ public class TeacherController {
         Exam exam = examRepository.findOne(id);
         String path = exam.getPaperPath();
         File parent = new File(path);
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
         if (parent.isDirectory()) {
             File[] fileList = parent.listFiles();
             if (fileList != null && fileList.length > 0) {

@@ -54,7 +54,6 @@ public class LoginController {
     @RequestMapping(value = {"/togo"})
     public String go(HttpServletRequest request,String name, String password, HttpSession session) {
         User user = userRepository.findByIdnumber(name);
-
         boolean f = false;
         boolean flag = true;
         if (user == null) {
@@ -62,6 +61,7 @@ public class LoginController {
         }
         if (!f) {
             boolean is = MD5Service.checkpassword(password, user.getPassword());
+            logger.info("-----------------is:{}", is);
             if (!is) {
                 f = true;
                 flag = false;

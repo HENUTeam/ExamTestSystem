@@ -1,6 +1,8 @@
 package com.henu.examtestsystem.teacher.controller;
 
+import com.henu.examtestsystem.student.bean.Exam;
 import com.henu.examtestsystem.student.bean.User;
+import com.henu.examtestsystem.student.repository.ExamRepository;
 import com.henu.examtestsystem.student.repository.UserRepository;
 import com.henu.examtestsystem.student.service.MD5Service;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,6 +29,9 @@ public class ManagerController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ExamRepository examRepository;
 
     Logger logger = LoggerFactory.getLogger(ManagerController.class);
 
@@ -114,8 +120,42 @@ public class ManagerController {
     }
 
     @RequestMapping("/delectexam")
-    public String delectexam() {
+    public String delectexam(ModelMap modelMap) {
+        List<Exam> exams = examRepository.findAll();
+        modelMap.addAttribute("exams", exams);
         return "/manager/delectexam";
+    }
+
+    @RequestMapping("/delectexam/{id}")
+    public String delectexamByID(@PathVariable Long id) {
+        try {
+            Exam exam = examRepository.findOne(id);
+            exam.setShow(false);
+            examRepository.save(exam);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "redirect:/manager/delectexam";
+    }
+
+    public boolean deleteFolder(String url) {
+        File file = new File(url);
+        if (!file.exists()) {
+            return false;
+        }
+        if (file.isFile()) {
+            file.delete();
+            return true;
+        } else {
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                String root = files[i].getAbsolutePath();//得到子文件或文件夹的绝对路径
+                //System.out.println(root);
+                deleteFolder(root);
+            }
+            file.delete();
+            return true;
+        }
     }
 
     @RequestMapping("/sysconfig")
