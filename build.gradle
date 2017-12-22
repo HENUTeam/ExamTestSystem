@@ -48,5 +48,4 @@ dependencies {
     compile group: 'org.apache.poi', name: 'poi', version: '3.17'
     // https://mvnrepository.com/artifact/org.apache.xmlbeans/xmlbeans
     compile group: 'org.apache.xmlbeans', name: 'xmlbeans', version: '2.6.0'
-
 }
