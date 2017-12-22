@@ -1,0 +1,30 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="is_end">
+
+    <script type="text/javascript">
+        setInterval(function(){
+            getMsgNum();
+        },1000);
+        function getMsgNum(){
+            $.ajax({
+                url:'/student/is_end',
+                type:'post',
+                dataType:'text',
+                success:function(data){
+                    if(data=="false"){
+                        end();
+                    }
+                }
+            });
+        }
+        function end() {
+            alert("考试已结束，感谢您的参与!!!");
+            $.ajax({
+                url:'/student/end',
+                type:'post'
+            });
+        }
+    </script>
+</div>
+</html>

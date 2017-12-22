@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Title</title>
+    <div th:replace="/teacher/layout::link"></div>
+</head>
+<body>
+<div th:replace="/teacher/layout::header"></div>
+
+<div class="container">
+    <div th:if="${error}" class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>erro!</strong> <span th:text="${msg}">Invalid username or password</span>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>考试名称</th>
+            <th>考试时间</th>
+            <th>创建人</th>
+            <th>上传试卷</th>
+            <th>自动开始</th>
+            <th>考试状态</th>
+            <th>已归档</th>
+            <th>已清理</th>
+            <th>*</th>
+        </tr>
+        </thead>
+        <tr th:each="exam: ${exams} ">
+            <td th:text="${exam.subject}"></td>
+            <td th:text="${exam.startDate}"></td>
+            <td th:text="${exam.createUser}"></td>
+            <td>
+                <span th:if="${exam.hasPaper}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <span th:if="${exam.autoStart}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <div th:switch="${exam.examState.name()}">
+                    <span th:case="'now'">进行中</span>
+                    <span th:case="'future'">未开始</span>
+                    <span th:case="'end'">已结束</span>
+                    <span th:case="*">未选择</span>
+                </div>
+            </td>
+            <td>
+                <span th:if="${exam.hasStore}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <span th:if="${exam.hasClean}" class="glyphicon glyphicon-ok"></span>
+            </td>
+            <td>
+                <a class="nav-link" th:if="${exam.examState.name()=='end'}"
+                   th:href="@{exam-after/zip/}+${exam.id}">打包下载</a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

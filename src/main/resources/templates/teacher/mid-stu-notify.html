@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <script th:src="@{/js/jquery-3.2.1.js}" src="../../static/js/jquery-3.2.1.js"></script>
+    <link rel="stylesheet" th:href="@{/css/bs4.css}" href="/css/bs4.css"/>
+    <script th:src="@{/js/bs4.js}" src="../../static/js/bs4.js"></script>
+    <link rel="stylesheet" th:href="@{/css/exam.css}" href="../../static/css/exam.css"/>
+    <link th:src="@{/css/bs3.css}" rel="stylesheet" href="../../static/css/bs3.css"/>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div th:replace="/teacher/layout::header"></div>
+
+<form class="exam-form" style="width: 90%; margin: 0 auto;" th:action="@{/teacher/push_mes}"
+      method="post">
+    <h4>新增通知信息</h4>
+    <input name="mess" type="text" placeholder="通知消息内容" />
+    <button type="submit"  class="btn btn-primary"> <i class="icon-plus"></i> 添加</button>
+</form>
+<br/><br/><br/>
+<table class="table table-bordered" style="width: 90%; margin: 0 auto;">
+    <title>查找结果</title>
+    <thead>
+    <tr>
+        <th>通知内容</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="stu: ${stus}">
+        <td th:text="${stu}">neo</td>
+
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
