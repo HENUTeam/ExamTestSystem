@@ -66,19 +66,22 @@ public class LoginController {
                 f = true;
                 flag = false;
             } else if (user.getRole().equals(User.Role.student)) {
-                String ip = IpService.getIpAddr(request);
-                if(user.getIp()!=null && user.getIp() != ip)
-                    return "redirect:/login?key=stu_iperror";
-                else if(user.getIp()==null)
-                {
-                    user.setIp(ip);
-                    userRepository.save(user);
-                }
                 List<Exam> list = user.getExams();
                 for (Exam e : list) {
                     if (e.getExamState().equals(Exam.ExamState.now)) {
                         flag = false;
                         break;
+                    }
+                }
+                if(!flag)
+                {
+                    String ip = IpService.getIpAddr(request);
+                    if(user.getIp()!=null && user.getIp() != ip)
+                        return "redirect:/login?key=stu_iperror";
+                    else if(user.getIp()==null)
+                    {
+                        user.setIp(ip);
+                        userRepository.save(user);
                     }
                 }
             }

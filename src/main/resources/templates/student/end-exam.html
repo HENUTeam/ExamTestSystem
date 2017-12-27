@@ -4,9 +4,9 @@
 
     <script type="text/javascript">
         setInterval(function(){
-            getMsgNum();
+            getMsg();
         },1000);
-        function getMsgNum(){
+        function getMsg(){
             $.ajax({
                 url:'/student/is_end',
                 type:'post',

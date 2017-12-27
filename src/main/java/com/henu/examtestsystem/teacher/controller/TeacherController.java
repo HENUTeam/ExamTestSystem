@@ -2,7 +2,6 @@ package com.henu.examtestsystem.teacher.controller;
 
 import com.henu.examtestsystem.student.bean.Exam;
 import com.henu.examtestsystem.student.bean.User;
-import com.henu.examtestsystem.student.bean.Message;
 import com.henu.examtestsystem.student.repository.ExamRepository;
 import com.henu.examtestsystem.student.repository.UserRepository;
 import com.henu.examtestsystem.student.service.MD5Service;
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,13 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 
-import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -85,7 +81,8 @@ public class TeacherController {
                                  HttpSession session) {
         ModelAndView mv = new ModelAndView();
         boolean f = false;
-
+        List<Exam> exams = examRepository.findAll();
+        modelMap.addAttribute("exams", exams);
         if (ename == null || ename.length() <= 0 ||
                 starttime.length() <= 0 || starttime == null) {
             f = true;
@@ -135,7 +132,9 @@ public class TeacherController {
             mv.setViewName("/teacher/exam-before");
         } else {
             User user = (User)session.getAttribute("user");
-            user.getExams().add(exam);
+            List<Exam> list = user.getExams();
+            list.add(exam);
+            user.setExams(list);
             userRepository.save(user);
             mv.setViewName("redirect:exam-before");
         }
@@ -153,6 +152,7 @@ public class TeacherController {
     public String addStu(String sno,String sname,String password,HttpSession session,ModelMap modelMap)
     {
         User user = userRepository.findByIdnumber(sno);
+
         if(user==null)
         {
             user = new User();
@@ -162,22 +162,37 @@ public class TeacherController {
             user.setExams(exams);
         }
         user.setName(sname);
+        if(password=="")
+            password=sname;
         user.setPassword(MD5Service.EncoderByMd5(password));
         User tea = (User) session.getAttribute("user");
         List<Exam> exa = tea.getExams();
         List<Exam> exams =  user.getExams();
+        boolean f=false;
         if(exa!=null)
         for (Exam e:exa) {
             if(e.getExamState().equals(Exam.ExamState.now))
             {
+                if (exams.contains(e))
+                {
+                    f=true;break;
+                }
+                List<User> list = e.getUser();
+                if(list!=null &&!list.contains(user))
+                list.add(user);
+                else if (list==null)
+                {
+                    list=new LinkedList<>();
+                    list.add(user);
+                }
+                e.setUser(list);
+                examRepository.save(e);
                 exams.add(e);
                 user.setExams(exams);
-                e.getUser().add(user);
-                examRepository.save(e);
             }
         }
+        modelMap.addAttribute("error",f);
         userRepository.save(user);
-        modelMap.addAttribute("error",false);
         return  "/teacher/mid-stu-info";
     }
 
@@ -253,7 +268,6 @@ public class TeacherController {
              ) {
             if (e.getExamState()==Exam.ExamState.now)
             {
-
                 id=e.getId();
             }
         }

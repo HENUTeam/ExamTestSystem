@@ -1,7 +1,6 @@
 package com.henu.examtestsystem.student.controller;
 
 import com.henu.examtestsystem.student.bean.Exam;
-import com.henu.examtestsystem.student.bean.Message;
 import com.henu.examtestsystem.student.bean.User;
 import com.henu.examtestsystem.student.repository.ExamRepository;
 import com.henu.examtestsystem.student.repository.UserRepository;
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.HttpSession;
-import javax.xml.bind.SchemaOutputResolver;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -145,6 +143,7 @@ public class StudentController {
         {
             list = TeacherController.map_mess.get(id);
         }
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$"+list.size());
         String mess="";
         if(list!=null)
         {
