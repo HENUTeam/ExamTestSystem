@@ -63,11 +63,19 @@ public class TeacherController {
     }
 
     @RequestMapping(value = "/exam-before")
-    public ModelAndView beforeexam(ModelMap modelMap) {
+    public ModelAndView beforeexam(ModelMap modelMap, HttpSession session) {
         ModelAndView mv = new ModelAndView();
         try {
+            User user = (User) session.getAttribute("user");
             List<Exam> exams = examRepository.findAll();
-            modelMap.addAttribute("exams", exams);
+            List<Exam> show = new ArrayList<Exam>();
+            for(int i=0;i<exams.size(); i++){
+                Exam exam = exams.get(i);
+                if(exam.getCreateUser().equals(user.getIdnumber())){
+                    show.add(exam);
+                }
+            }
+            modelMap.addAttribute("exams", show);
         } catch (Exception e) {
             modelMap.addAttribute("error", true);
             modelMap.addAttribute("msg", "查找所有考试失败");
@@ -280,7 +288,7 @@ public class TeacherController {
         List<Exam> list = user.getExams();
         if(list!=null)
         for(Exam e: list){
-            if(e.getExamState()==Exam.ExamState.now)
+            if(examRepository.findOne(e.getId()).getExamState()==Exam.ExamState.now)
             {
                 return true;
             }

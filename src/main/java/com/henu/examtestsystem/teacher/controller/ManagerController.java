@@ -122,7 +122,14 @@ public class ManagerController {
     @RequestMapping("/delectexam")
     public String delectexam(ModelMap modelMap) {
         List<Exam> exams = examRepository.findAll();
-        modelMap.addAttribute("exams", exams);
+        List<Exam> show = new ArrayList<Exam>();
+        for(int i=0;i<exams.size(); i++){
+            Exam exam = exams.get(i);
+            if(exam.isShow()){
+                show.add(exam);
+            }
+        }
+        modelMap.addAttribute("exams", show);
         return "/manager/delectexam";
     }
 
