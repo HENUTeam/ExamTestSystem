@@ -278,8 +278,9 @@ public class TeacherController {
     public boolean is_now(User user)
     {
         List<Exam> list = user.getExams();
+        if(list!=null)
         for(Exam e: list){
-            if(e.getExamState().equals(Exam.ExamState.now))
+            if(e.getExamState()==Exam.ExamState.now)
             {
                 return true;
             }
