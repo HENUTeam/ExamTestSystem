@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -151,48 +152,36 @@ public class TeacherController {
     @RequestMapping(value = "/addStu")
     public String addStu(String sno,String sname,String password,HttpSession session,ModelMap modelMap)
     {
-        User user = userRepository.findByIdnumber(sno);
-
-        if(user==null)
-        {
-            user = new User();
-            user.setIdnumber(sno);
-            user.setRole(User.Role.student);
-            List<Exam> exams = new LinkedList<Exam>();
-            user.setExams(exams);
-        }
-        user.setName(sname);
-        if(password=="")
-            password=sname;
-        user.setPassword(MD5Service.EncoderByMd5(password));
         User tea = (User) session.getAttribute("user");
         List<Exam> exa = tea.getExams();
-        List<Exam> exams =  user.getExams();
         boolean f=false;
+        Long id=new Long(0);
         if(exa!=null)
         for (Exam e:exa) {
             if(e.getExamState().equals(Exam.ExamState.now))
             {
-                if (exams.contains(e))
-                {
-                    f=true;break;
-                }
-                List<User> list = e.getUser();
-                if(list!=null &&!list.contains(user))
-                list.add(user);
-                else if (list==null)
-                {
-                    list=new LinkedList<>();
-                    list.add(user);
-                }
-                e.setUser(list);
-                examRepository.save(e);
-                exams.add(e);
-                user.setExams(exams);
+                id = e.getId();
             }
         }
+        try {
+            if (password.length()==0)
+            {System.out.println("##############################");
+                addStudent(sno,sname,id);
+
+            }
+            else
+            {
+                System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$");
+                addStudent(sno,sname,id,password);
+
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            f=true;
+        }
         modelMap.addAttribute("error",f);
-        userRepository.save(user);
         return  "/teacher/mid-stu-info";
     }
 
@@ -285,22 +274,44 @@ public class TeacherController {
         model.addAttribute("stus",map_mess.get(id));
         return "teacher/mid-stu-notify";
     }
+
+    public boolean is_now(User user)
+    {
+        List<Exam> list = user.getExams();
+        for(Exam e: list){
+            if(e.getExamState().equals(Exam.ExamState.now))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
     /***
      * 考中学生信息查看
      */
     @RequestMapping(value = "/info")
-    public String stu_info()
+    public String stu_info(HttpSession session,ModelMap modelMap)
     {
-        return "/teacher/mid-stu-info";
+        if (is_now((User) session.getAttribute("user")))
+        {
+            return "/teacher/mid-stu-info";
+        }
+        modelMap.addAttribute("is_now",false);
+        return "/teacher/index";
     }
 
     /***
      * 考中接触锁定ip
      */
     @RequestMapping(value = "/ip")
-    public String stu_ip()
+    public String stu_ip(HttpSession session,ModelMap modelMap)
     {
-        return "/teacher/mid-stu-ip";
+        if (is_now((User) session.getAttribute("user")))
+        {
+            return "/teacher/mid-stu-ip";
+        }
+        modelMap.addAttribute("is_now",false);
+        return "/teacher/index";
     }
 
     /***
@@ -308,9 +319,14 @@ public class TeacherController {
      * @return
      */
     @RequestMapping(value = "/notf")
-    public String stu_notf()
+    public String stu_notf(HttpSession session,ModelMap modelMap)
     {
-        return "redirect:/teacher/push_mes";
+        if (is_now((User) session.getAttribute("user")))
+        {
+            return "redirect:/teacher/push_mes";
+        }
+        modelMap.addAttribute("is_now",false);
+        return "/teacher/index";
     }
 
 
@@ -426,7 +442,6 @@ public class TeacherController {
         List<User> stus = exam.getUser();
         modelMap.addAttribute("stus", stus);
         modelMap.addAttribute("exam", exam);
-
         if (sno == null || sno.length() <= 0 || name.length() <= 0) {
             modelMap.addAttribute("info", "学号和姓名都不能为空");
         } else {
@@ -470,6 +485,51 @@ public class TeacherController {
             e.printStackTrace();
         }
         return "teacher/addStudent";
+    }
+
+    /**
+     * 根据sno，sname和考试的id来添加学生
+     *
+     * @param sno  学号
+     * @param name 姓名
+     * @param id   考试id
+     */
+    @Transactional(rollbackFor = Exception.class, isolation = Isolation.DEFAULT)
+    public void addStudent(String sno, String name, Long id,String password) throws Exception {
+        Exam exam = examRepository.findOne(id);
+        User user = userRepository.findByIdnumber(sno);
+        List<Exam> exams = null;
+        if (user == null) {
+            user = new User();
+            exams = new ArrayList<Exam>();
+            user.setRole(User.Role.student);
+            String s = password;
+            System.out.println(s+"^^^^^^^^^^^^^^^^^^^^^^");
+            user.setIdnumber(sno);
+            user.setPassword(MD5Service.EncoderByMd5(s));
+            user.setName(name);
+            user.setExams(exams);
+            user.setSex(User.Sex.男);
+        }else
+        {
+            user.setName(name);
+            user.setPassword(MD5Service.EncoderByMd5(password));
+        }
+        exams = user.getExams();
+        if (!exams.contains(exam)) {
+            exams.add(exam);
+        }
+        user.setExams(exams);
+        userRepository.save(user);
+        List<User> users = exam.getUser();
+        if (users == null) {
+            users = new ArrayList<User>();
+        }
+        if (!users.contains(user)) {
+            users.add(user);
+        }
+        exam.setUser(users);
+        examRepository.save(exam);
     }
 
 
