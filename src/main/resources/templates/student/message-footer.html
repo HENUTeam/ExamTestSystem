@@ -1,0 +1,28 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="footer">
+
+<br/><br/><br/><br/><br/><br/>
+    <textarea id="textarea" cols="100" rows="4"
+              style="BORDER-BOTTOM: 0px solid; BORDER-LEFT: 0px solid; BORDER-RIGHT: 0px solid;
+               BORDER-TOP: 0px solid; color: red" readonly="readonly">通知信息</textarea>
+    <script type="text/javascript">
+        setInterval(function(){
+
+            getMsgNum();
+        },1000);
+        function getMsgNum(){
+            $.ajax({
+                url:'/student/get_mess',
+                type:'post',
+                dataType:'text',
+                success:function(data){
+                    if(data){
+                        $("#textarea").html(data);
+                    }
+                }
+            });
+        }
+    </script>
+</div>
+</html>

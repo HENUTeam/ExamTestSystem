@@ -4,7 +4,6 @@ server:
     uri-encoding: UTF-8
   session:
     timeout: 10800
-  context-path:
 spring:
   thymeleaf:
     suffix: .html
