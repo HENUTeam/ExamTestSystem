@@ -71,10 +71,12 @@ public class TeacherController {
             List<Exam> show = new ArrayList<Exam>();
             for(int i=0;i<exams.size(); i++){
                 Exam exam = exams.get(i);
-                if(exam.getCreateUser().equals(user.getIdnumber())){
+                logger.info("==========user:{},user2{}",exam.getCreateUser(), user.getIdnumber());
+                if(exam.getCreateUser().equals(user.getName())){
                     show.add(exam);
                 }
             }
+            logger.info("==========size:{}",show.size());
             modelMap.addAttribute("exams", show);
         } catch (Exception e) {
             modelMap.addAttribute("error", true);
